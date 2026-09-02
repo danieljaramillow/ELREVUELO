@@ -2,7 +2,7 @@
   "name": "El Revuelo · Programa de Cría Paso Fino",
   "short_name": "El Revuelo",
   "description": "Programa de cría y análisis genealógico del Criadero El Revuelo.",
-  "start_url": "./EL_REVUELO_PASO_FINO.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

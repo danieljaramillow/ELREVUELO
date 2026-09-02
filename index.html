@@ -304,6 +304,21 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
 .rank-item .cnt{font-weight:700;color:var(--cuero-900);background:var(--crema-2);padding:2px 10px;border-radius:10px;font-size:12px;}
 
 /* ---------- Pie de página ---------- */
+.offline-chip{
+  display:none;align-items:center;gap:7px;font-family:var(--sans);font-size:11.5px;
+  padding:5px 11px;border-radius:20px;border:1px solid var(--linea);
+  background:var(--crema);color:var(--cuero-700);white-space:nowrap;
+}
+.offline-chip.visible{display:inline-flex;}
+.offline-chip .punto{width:7px;height:7px;border-radius:50%;background:#9aa08f;flex:none;}
+.offline-chip.listo .punto{background:#2f6b3a;}
+.offline-chip.sinred{background:#f7e6e0;border-color:#e0c4bb;color:#8c4a3c;}
+.offline-chip.sinred .punto{background:#8c4a3c;}
+.offline-chip button{
+  background:none;border:0;padding:0;margin-left:2px;cursor:pointer;
+  font:inherit;color:var(--oro-2);text-decoration:underline;
+}
+@media print{.offline-chip{display:none !important;}}
 .app-footer{
   text-align:center;padding:22px 20px 90px;font-size:11.5px;color:var(--cuero-700);
   letter-spacing:.3px;
@@ -745,7 +760,7 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
   <section class="view" id="view-reproductores">
     <h2 class="view-title">Reproductores</h2>
     <p class="view-desc">Rendimiento promedio de las crías registradas de cada semental y cada yegua, para comparar reproductores dentro del hato activo.</p>
-    <div class="note" style="margin-bottom:20px;">Solo se promedian crías con calificación registrada (Calif. Conformación / Paso / Final) dentro de los 42 animales del hato activo — los animales de referencia de pedigrí no tienen estos datos en tu Excel. Con pocas crías calificadas por reproductor, el promedio es poco representativo; revisa la columna "crías calificadas" antes de sacar conclusiones.</div>
+    <div class="note" style="margin-bottom:20px;">Solo se promedian crías con calificación registrada (Calif. Conformación / Paso / Final) dentro de los <span id="reproTotalHato">—</span> animales del hato activo — los animales de referencia de pedigrí no tienen estos datos en tu Excel. Con pocas crías calificadas por reproductor, el promedio es poco representativo; revisa la columna "crías calificadas" antes de sacar conclusiones.</div>
 
     <div class="section-label" style="margin-top:0;">Comparativo de Sementales (padres)</div>
     <div class="btn-row" style="margin-top:0;margin-bottom:10px;">
@@ -768,7 +783,10 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
 
 </main>
 
-<footer class="app-footer">Desarrollado por Daniel Jaramillo Williamson</footer>
+<footer class="app-footer">
+  <div id="offlineChip" class="offline-chip"><span class="punto"></span><span id="offlineTexto"></span></div>
+  <div style="margin-top:8px;">Desarrollado por Daniel Jaramillo Williamson</div>
+</footer>
 
 <!-- BUSCADOR GLOBAL (siempre visible, en cualquier pestaña) -->
 <button class="global-search-fab" id="globalSearchFab" title="Buscar animal (o presiona /)">🔍</button>
@@ -3401,6 +3419,74 @@ document.getElementById('crNacModal').addEventListener('click', e=>{
 });
 
 renderPrograma();
+
+// ---------------------------------------------------------------------
+// Funcionamiento sin conexión
+// ---------------------------------------------------------------------
+(function(){
+  const chip = document.getElementById('offlineChip');
+  const texto = document.getElementById('offlineTexto');
+  if(!chip) return;
+
+  function estado(clase, msg, accion){
+    chip.className = 'offline-chip visible' + (clase ? ' ' + clase : '');
+    texto.textContent = msg;
+    const viejo = chip.querySelector('button');
+    if(viejo) viejo.remove();
+    if(accion){
+      const b = document.createElement('button');
+      b.textContent = accion.texto;
+      b.onclick = accion.fn;
+      chip.appendChild(b);
+    }
+  }
+
+  function pintarConexion(){
+    if(!navigator.onLine) estado('sinred', 'Sin conexión — trabajando con la copia guardada');
+    else if(chip.dataset.listo) estado('listo', 'Disponible sin conexión');
+    else chip.className = 'offline-chip';
+  }
+  window.addEventListener('online', pintarConexion);
+  window.addEventListener('offline', pintarConexion);
+
+  // Solo funciona servido por https (GitHub Pages) o en localhost. Abierto
+  // como archivo suelto no aplica, y el tablero sigue igual de completo.
+  if(!('serviceWorker' in navigator) || !location.protocol.startsWith('http')){
+    pintarConexion();
+    return;
+  }
+
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    if(navigator.serviceWorker.controller){
+      chip.dataset.listo = '1';
+      pintarConexion();
+    } else {
+      estado('', 'Guardando una copia para usar sin conexión…');
+      navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+        chip.dataset.listo = '1'; pintarConexion();
+      });
+    }
+    reg.addEventListener('updatefound', ()=>{
+      const nuevo = reg.installing;
+      if(!nuevo) return;
+      nuevo.addEventListener('statechange', ()=>{
+        if(nuevo.state === 'installed' && navigator.serviceWorker.controller){
+          estado('', 'Hay una versión nueva', {texto:'Actualizar', fn:()=>{
+            nuevo.postMessage('actualizar');
+            setTimeout(()=>location.reload(), 250);
+          }});
+        }
+      });
+    });
+  }).catch(()=>{ pintarConexion(); });
+})();
+
+// El conteo del hato activo se calcula, no se escribe a mano: así no
+// vuelve a quedar desactualizado cuando entran o salen animales.
+(function(){
+  const el = document.getElementById('reproTotalHato');
+  if(el) el.textContent = RAW.filter(a=>a.activo === 'ACTIVO').length;
+})();
 
 renderPanel();
 renderInventario();
