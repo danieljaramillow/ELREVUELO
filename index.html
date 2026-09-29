@@ -129,6 +129,73 @@ p.view-desc{margin:0 0 22px;color:var(--cuero-700);font-size:13.5px;max-width:76
 }
 .pill.on{background:var(--cuero-900);color:var(--oro-2);border-color:var(--cuero-900);}
 
+/* ---------- Crías registradas (ficha) ---------- */
+.crias-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px;}
+.crias-card{border:1px solid var(--linea);border-radius:var(--radio);padding:10px 12px;background:var(--papel);}
+.crias-card .n{font-family:var(--serif);font-size:24px;color:var(--cuero-900);line-height:1.1;}
+.crias-card .l{font-size:11px;color:var(--cuero-700);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
+.est-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap;}
+.est-activo{background:#e3ead8;color:var(--verde-pasto);}
+.est-inactivo{background:#f3dcd6;color:var(--rojo-alerta);}
+.est-ref{background:var(--crema-2);color:var(--cuero-700);border:1px solid var(--linea);}
+.crias-wrap{overflow-x:auto;}
+
+/* =================== PÁGINA DE PRESENTACIÓN =================== */
+.pres-overlay{position:fixed;inset:0;z-index:200;background:#6b5a4b;overflow:auto;display:none;}
+.pres-overlay.open{display:block;}
+.pres-bar{position:sticky;top:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;padding:10px 12px;background:var(--cuero-950,#231710);}
+.pres-bar .btn{font-size:13px;}
+.pres-bar .btn.ghost{background:transparent;color:var(--crema);border-color:#8a6d4f;}
+.pres-bar .btn.ghost:hover{background:#3a2a20;}
+body.presentando .global-search-fab{display:none !important;}
+.pres-bar label.btn{cursor:pointer;}
+.pres-bar .hint{color:var(--crema-2);font-size:11.5px;width:100%;text-align:center;}
+.pres-sheet-wrap{padding:18px 10px 40px;overflow:hidden;}
+.pres-sheet{width:279.4mm;height:215.9mm;margin:0 auto;background:#fffdf8;box-shadow:0 8px 30px rgba(0,0,0,.35);
+  box-sizing:border-box;padding:11mm 12mm 9mm;display:flex;flex-direction:column;color:#2b1d15;font-family:var(--sans);transform-origin:top left;}
+.pres-head{display:flex;align-items:stretch;gap:9mm;border-bottom:2px solid #890016;padding-bottom:5mm;}
+.pres-brand{display:flex;align-items:center;gap:3mm;font-size:9pt;letter-spacing:.14em;text-transform:uppercase;color:#7a5a3a;}
+.pres-brand svg{width:9mm;height:9.4mm;}
+.pres-main{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0;}
+.pres-name{font-family:var(--serif);font-size:27pt;line-height:1.05;color:#2b1d15;margin:3mm 0 1.2mm;}
+.pres-sub{font-size:10.5pt;color:#7a5a3a;}
+.pres-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:4mm;border:1px solid #e0d2b4;border-radius:2mm;overflow:hidden;}
+.pres-fact{padding:2mm 3mm;border-right:1px solid #e0d2b4;border-bottom:1px solid #e0d2b4;min-width:0;}
+.pres-fact .l{font-size:6.8pt;text-transform:uppercase;letter-spacing:.08em;color:#8a6d4f;}
+.pres-fact .v{font-size:10pt;font-weight:600;margin-top:.6mm;overflow-wrap:anywhere;}
+.pres-photo{width:62mm;flex:none;border-radius:2mm;overflow:hidden;background:#f1e8d6;border:1px solid #e0d2b4;display:flex;align-items:center;justify-content:center;
+  color:#a88c6c;font-size:9pt;text-align:center;}
+.pres-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.pres-photo.empty{display:none;}
+.pres-ped-title{font-family:var(--serif);font-size:13pt;margin:4mm 0 2mm;display:flex;justify-content:space-between;align-items:baseline;}
+.pres-ped-title small{font-family:var(--sans);font-size:7.5pt;color:#8a6d4f;}
+.pres-ped{position:relative;flex:1;display:grid;grid-template-columns:1fr 1fr 1fr 1.08fr;grid-template-rows:repeat(16,1fr);column-gap:5mm;min-height:0;}
+.pres-cell{position:relative;display:flex;align-items:center;min-height:0;}
+.pres-box{width:100%;box-sizing:border-box;border:1px solid #d9c7a3;border-left:3px solid #6f4a2d;border-radius:1.5mm;padding:1mm 2.2mm;background:#fffaf0;
+  font-size:7.6pt;line-height:1.15;font-weight:600;overflow:hidden;}
+.pres-cell.h .pres-box{border-left-color:#b8894a;}
+.pres-cell.g1 .pres-box{font-size:10pt;padding:2.2mm 3mm;}
+.pres-cell.g2 .pres-box{font-size:8.8pt;padding:1.6mm 2.6mm;}
+.pres-cell.g4 .pres-box{font-size:7pt;padding:.6mm 2mm;}
+.pres-box .rol{display:block;font-size:6.2pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8a6d4f;margin-bottom:.4mm;}
+.pres-box.unk{color:#b5a58c;font-weight:500;background:transparent;border-style:dashed;}
+.pres-box.rep{background:var(--rep-bg);}
+.pres-box .rmark{float:right;font-size:6pt;font-weight:800;color:#fff;background:var(--rep-c);border-radius:1mm;padding:0 1mm;margin-left:1mm;}
+/* conectores: línea horizontal hacia la izquierda (al hijo) */
+.pres-cell:not(.g1)::before{content:"";position:absolute;left:-2.5mm;top:50%;width:2.5mm;border-top:1px solid #b9a07a;}
+.pres-cell.g1::after,.pres-cell.g2::after,.pres-cell.g3::after{content:"";position:absolute;right:-2.5mm;top:50%;width:2.5mm;border-top:1px solid #b9a07a;}
+.pres-vline{position:absolute;border-left:1px solid #b9a07a;}
+.pres-foot{display:flex;justify-content:space-between;gap:6mm;margin-top:3mm;padding-top:2mm;border-top:1px solid #e0d2b4;font-size:7.2pt;color:#8a6d4f;}
+.pres-reps{flex:1;}
+@media print{
+  body.presentando > *:not(#presOverlay){display:none !important;}
+  body.presentando #presOverlay{position:static;display:block !important;background:none;overflow:visible;}
+  body.presentando .pres-bar{display:none !important;}
+  body.presentando .pres-sheet-wrap{padding:0;}
+  body.presentando .pres-sheet{box-shadow:none;margin:0;transform:none !important;}
+  @page{size:letter landscape;margin:0;}
+  body.presentando{background:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
 /* ---------- Tabla inventario ---------- */
 table.reg{width:100%;border-collapse:collapse;font-size:13px;}
 table.reg thead th{
@@ -152,12 +219,18 @@ table.reg tbody tr:hover{background:var(--crema-2);}
 .picker input{width:100%;padding:11px 14px;border:1px solid var(--linea);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--papel);}
 .picker-list{
   position:absolute;top:100%;left:0;right:0;background:var(--papel);border:1px solid var(--linea);
-  border-radius:0 0 8px 8px;max-height:230px;overflow-y:auto;z-index:30;box-shadow:var(--sombra);display:none;
+  border-radius:0 0 8px 8px;max-height:340px;overflow-y:auto;z-index:30;box-shadow:var(--sombra);display:none;
 }
 .picker-list.open{display:block;}
 .picker-item{padding:9px 14px;cursor:pointer;font-size:13.5px;border-bottom:1px solid var(--crema-2);}
 .picker-item:hover{background:var(--crema-2);}
 .picker-item small{display:block;color:var(--cuero-700);font-size:11px;}
+.picker-item.sel, .global-search-item.sel{background:var(--crema-2);outline:2px solid var(--oro);outline-offset:-2px;}
+.picker-item mark, .global-search-item mark{background:#f1dc9b;color:inherit;padding:0 1px;border-radius:2px;}
+.picker-item .est-badge{margin-left:6px;vertical-align:1px;font-size:10px;padding:2px 7px;}
+.picker-group{padding:6px 14px 4px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--cuero-700);background:var(--crema-2);}
+.toolbar .picker{flex:1;min-width:180px;}
+.toolbar .picker input[type=text]{width:100%;}
 
 /* ---------- Ficha individual ---------- */
 .ficha-header{
@@ -540,7 +613,7 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
     <h2 class="view-title">Inventario</h2>
     <p class="view-desc">Catálogo completo de animales registrados. Haz clic en un nombre para abrir su ficha individual.</p>
     <div class="toolbar">
-      <input type="text" id="invSearch" placeholder="Buscar por nombre, padre o madre…">
+      <div class="picker"><input type="text" id="invSearch" placeholder="Buscar por nombre, padre o madre…" autocomplete="off"><div class="picker-list" id="invList"></div></div>
       <div class="pill-toggle" id="invSexFilter">
         <span class="pill on" data-sexo="all">Todos</span>
         <span class="pill" data-sexo="H">Hembras</span>
@@ -574,7 +647,7 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
     <h2 class="view-title">Ficha Individual</h2>
     <p class="view-desc">Selecciona un animal para ver sus datos, su árbol genealógico y su coeficiente de consanguinidad.</p>
     <div class="picker" style="max-width:420px;margin-bottom:22px;">
-      <input type="text" id="fichaSearch" placeholder="Buscar animal por nombre…">
+      <input type="text" id="fichaSearch" autocomplete="off" placeholder="Buscar animal por nombre…">
       <div class="picker-list" id="fichaList"></div>
     </div>
     <div id="fichaContent"><div class="empty-state"><div class="ico">🐎</div>Busca y selecciona un animal para ver su ficha.</div></div>
@@ -789,10 +862,20 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
 </footer>
 
 <!-- BUSCADOR GLOBAL (siempre visible, en cualquier pestaña) -->
+<div class="pres-overlay" id="presOverlay">
+  <div class="pres-bar">
+    <button class="btn" id="presPdf">⬇ Exportar PDF</button>
+    <label class="btn ghost">📷 Agregar foto<input type="file" accept="image/*" id="presFoto" hidden></label>
+    <button class="btn ghost" id="presQuitarFoto" style="display:none;">Quitar foto</button>
+    <button class="btn ghost" id="presCerrar">✕ Cerrar</button>
+    <div class="hint">En la ventana de impresión elija «Guardar como PDF». Tamaño carta horizontal.</div>
+  </div>
+  <div class="pres-sheet-wrap"><div class="pres-sheet" id="presSheet"></div></div>
+</div>
 <button class="global-search-fab" id="globalSearchFab" title="Buscar animal (o presiona /)">🔍</button>
 <div class="global-search-overlay" id="globalSearchOverlay">
   <div class="global-search-box">
-    <input type="text" id="globalSearchInput" placeholder="Buscar animal por nombre, en cualquier pestaña…">
+    <input type="text" id="globalSearchInput" autocomplete="off" placeholder="Buscar animal por nombre, en cualquier pestaña…">
     <div class="global-search-results" id="globalSearchResults"></div>
     <div class="global-search-hint">Esc para cerrar</div>
   </div>
@@ -1958,7 +2041,40 @@ function renderInventario(){
   }).join('') || '<tr><td colspan="10" style="text-align:center;padding:30px;color:var(--cuero-700);">Sin resultados.</td></tr>';
 }
 
-document.getElementById('invSearch').addEventListener('input', e=>{ invState.search = e.target.value; renderInventario(); });
+const invSearchEl = document.getElementById('invSearch');
+const invListEl = document.getElementById('invList');
+function renderInvSugerencias(){
+  const q = invSearchEl.value;
+  const qq = sinTildes(q).trim();
+  if(!qq){ invListEl.classList.remove('open'); return; }
+  const anim = buscarAnimales(q, 10);
+  // Padres y madres (del hato o de referencia) cuyo nombre coincide, con # de hijos en el hato
+  const prog = new Map();
+  RAW.forEach(a=>{
+    [['padre','Padre'],['madre','Madre']].forEach(([campo,rol])=>{
+      const n = a[campo]; if(!n || !sinTildes(n).includes(qq)) return;
+      const k = normKey(n);
+      if(!prog.has(k)) prog.set(k,{nombre:n, rol, hijos:0});
+      prog.get(k).hijos++;
+    });
+  });
+  const progs = [...prog.values()].sort((x,y)=>y.hijos-x.hijos).slice(0,8);
+  let html = '';
+  if(anim.length) html += '<div class="picker-group">Animales — abrir ficha</div>' + anim.map(a=>itemAnimalHtml(a, q, 'picker-item')).join('');
+  if(progs.length) html += '<div class="picker-group">Como padre / madre — filtrar inventario</div>' + progs.map(p=>
+    `<div class="picker-item" data-filtro="${escHtml(p.nombre)}">${resaltar(p.nombre,q)}<small>${p.rol} de ${p.hijos} animal${p.hijos>1?'es':''} del hato</small></div>`).join('');
+  invListEl.innerHTML = html || '<div class="picker-item" style="cursor:default;color:var(--cuero-700);">Sin coincidencias</div>';
+  invListEl.classList.add('open');
+}
+function elegirInv(it){
+  invListEl.classList.remove('open');
+  if(it.dataset.name){ openFicha(it.dataset.name); }
+  else if(it.dataset.filtro){ invSearchEl.value = it.dataset.filtro; invState.search = it.dataset.filtro; renderInventario(); invSearchEl.blur(); }
+}
+invSearchEl.addEventListener('input', e=>{ invState.search = e.target.value; renderInventario(); renderInvSugerencias(); });
+invSearchEl.addEventListener('focus', renderInvSugerencias);
+invListEl.addEventListener('click', e=>{ const it = e.target.closest('.picker-item'); if(it && (it.dataset.name||it.dataset.filtro)) elegirInv(it); });
+navTeclado(invSearchEl, invListEl, '.picker-item[data-name], .picker-item[data-filtro]', elegirInv, ()=>invListEl.classList.remove('open'));
 document.getElementById('invSexFilter').addEventListener('click', e=>{
   if(e.target.classList.contains('pill')){
     document.querySelectorAll('#invSexFilter .pill').forEach(p=>p.classList.remove('on'));
@@ -1997,6 +2113,57 @@ document.getElementById('invExport').addEventListener('click', ()=>{
 });
 
 // =====================================================================
+// SUGERENCIAS DE BÚSQUEDA (lista desplegable mientras se escribe)
+// =====================================================================
+function escHtml(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function sinTildes(s){ return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+// Resalta la coincidencia (ignora tildes y mayúsculas)
+function resaltar(texto, q){
+  texto = texto||''; const qq = sinTildes(q).trim();
+  if(!qq) return escHtml(texto);
+  const i = sinTildes(texto).indexOf(qq);
+  if(i<0) return escHtml(texto);
+  return escHtml(texto.slice(0,i)) + '<mark>' + escHtml(texto.slice(i,i+qq.length)) + '</mark>' + escHtml(texto.slice(i+qq.length));
+}
+// Animales del hato que coinciden: primero los que EMPIEZAN por lo escrito, luego los que lo contienen
+function buscarAnimales(q, max){
+  const qq = sinTildes(q).trim();
+  if(!qq) return [];
+  const empieza = [], contiene = [];
+  RAW.forEach(a=>{
+    const n = sinTildes(a.nombre);
+    if(n.startsWith(qq) || n.split(' ').some(w=>w.startsWith(qq))) empieza.push(a);
+    else if(n.includes(qq)) contiene.push(a);
+  });
+  const ord = (x,y)=> (x.activo==='ACTIVO'?0:1)-(y.activo==='ACTIVO'?0:1) || (x.nombre||'').localeCompare(y.nombre||'');
+  return empieza.sort(ord).concat(contiene.sort(ord)).slice(0, max||12);
+}
+function itemAnimalHtml(a, q, cls){
+  const nc = criasDe(a.nombre);
+  const act = nc.filter(c=>c.estado==='ACTIVO').length;
+  const crTxt = nc.length ? ` · ${nc.length} cría${nc.length>1?'s':''} (${act} activa${act===1?'':'s'})` : '';
+  return `<div class="${cls}" data-name="${escHtml(a.nombre)}">${resaltar(a.nombre,q)}${estadoBadge((a.activo||'SIN DATO').toUpperCase()).replace('ACTIVA','ACTIVO').replace('INACTIVA','INACTIVO')}
+    <small>${sexoLabel(a.sexo)} · ${a.raza||'—'}${a.padre?' · Padre: '+escHtml(a.padre):''}${crTxt}</small></div>`;
+}
+// Navegación con teclado (↑ ↓ Enter Esc) sobre una lista desplegable
+function navTeclado(input, listEl, itemSel, onEnter, onEsc){
+  input.addEventListener('keydown', e=>{
+    const items = [...listEl.querySelectorAll(itemSel)];
+    if(!items.length) return;
+    let i = items.findIndex(x=>x.classList.contains('sel'));
+    if(e.key==='ArrowDown' || e.key==='ArrowUp'){
+      e.preventDefault();
+      if(i>=0) items[i].classList.remove('sel');
+      i = e.key==='ArrowDown' ? (i+1)%items.length : (i<=0 ? items.length-1 : i-1);
+      items[i].classList.add('sel'); items[i].scrollIntoView({block:'nearest'});
+    } else if(e.key==='Enter'){
+      e.preventDefault();
+      onEnter(items[i>=0?i:0]);
+    } else if(e.key==='Escape' && onEsc){ onEsc(); }
+  });
+}
+
+// =====================================================================
 // FICHA INDIVIDUAL
 // =====================================================================
 function openFicha(name){
@@ -2012,10 +2179,10 @@ window.openFicha = openFicha;
 const fichaSearchEl = document.getElementById('fichaSearch');
 const fichaListEl = document.getElementById('fichaList');
 fichaSearchEl.addEventListener('input', ()=>{
-  const q = fichaSearchEl.value.toLowerCase();
-  if(!q){ fichaListEl.classList.remove('open'); return; }
-  const matches = RAW.filter(a=>(a.nombre||'').toLowerCase().includes(q)).slice(0,12);
-  fichaListEl.innerHTML = matches.map(a=>`<div class="picker-item" data-name="${a.nombre.replace(/"/g,'&quot;')}">${a.nombre}<small>${sexoLabel(a.sexo)} · ${a.raza||'—'}</small></div>`).join('') || '<div class="picker-item">Sin coincidencias</div>';
+  const q = fichaSearchEl.value;
+  if(!q.trim()){ fichaListEl.classList.remove('open'); return; }
+  const matches = buscarAnimales(q, 15);
+  fichaListEl.innerHTML = matches.map(a=>itemAnimalHtml(a, q, 'picker-item')).join('') || '<div class="picker-item" style="cursor:default;color:var(--cuero-700);">Sin coincidencias en el hato</div>';
   fichaListEl.classList.add('open');
 });
 fichaListEl.addEventListener('click', e=>{
@@ -2026,9 +2193,260 @@ fichaListEl.addEventListener('click', e=>{
     renderFicha(item.dataset.name);
   }
 });
+fichaSearchEl.addEventListener('focus', ()=>{ if(fichaSearchEl.value.trim()) fichaSearchEl.dispatchEvent(new Event('input')); });
+navTeclado(fichaSearchEl, fichaListEl, '.picker-item[data-name]', it=>{
+  fichaSearchEl.value = it.dataset.name; fichaListEl.classList.remove('open'); fichaSearchEl.blur(); renderFicha(it.dataset.name);
+}, ()=>fichaListEl.classList.remove('open'));
 document.addEventListener('click', e=>{
-  if(!e.target.closest('.picker')) { fichaListEl.classList.remove('open'); }
+  if(!e.target.closest('.picker')) { fichaListEl.classList.remove('open'); document.getElementById('invList').classList.remove('open'); }
 });
+
+
+// =====================================================================
+// CRÍAS REGISTRADAS de un animal (hato + zona de referencia del LISTADO)
+// =====================================================================
+function criasDe(name){
+  const k = normKey(name);
+  if(!k) return [];
+  const out = [], vistos = new Set();
+  RAW.forEach(c=>{
+    const ck = normKey(c.nombre);
+    if(!ck || vistos.has(ck)) return;
+    if(normKey(c.padre)===k || normKey(c.madre)===k){
+      vistos.add(ck);
+      out.push({nombre:c.nombre, sexo:c.sexo, fecha_nac:c.fecha_nac, padre:c.padre, madre:c.madre,
+        calif_final:c.calif_final, estado:(c.activo||'SIN DATO').toUpperCase(), enHato:true, nueva:!!c._nuevaCria});
+    }
+  });
+  PEDIGREE_INDEX.forEach(r=>{
+    const ck = normKey(r.nombre);
+    if(!ck || vistos.has(ck) || BY_NAME.has(ck)) return;
+    if(normKey(r.padre)===k || normKey(r.madre)===k){
+      vistos.add(ck);
+      out.push({nombre:r.nombre, sexo:null, fecha_nac:null, padre:r.padre, madre:r.madre,
+        calif_final:null, estado:'REFERENCIA', enHato:false});
+    }
+  });
+  const orden = {ACTIVO:0, INACTIVO:1, 'SIN DATO':2, REFERENCIA:3};
+  out.sort((a,b)=>{
+    const oa = orden[a.estado] ?? 2, ob = orden[b.estado] ?? 2;
+    if(oa!==ob) return oa-ob;
+    const fa = a.fecha_nac ? new Date(a.fecha_nac).getTime() : 0;
+    const fb = b.fecha_nac ? new Date(b.fecha_nac).getTime() : 0;
+    if(fa!==fb) return fb-fa;
+    return (a.nombre||'').localeCompare(b.nombre||'');
+  });
+  return out;
+}
+
+function estadoBadge(estado){
+  if(estado==='ACTIVO') return '<span class="est-badge est-activo">ACTIVA</span>';
+  if(estado==='INACTIVO') return '<span class="est-badge est-inactivo">INACTIVA</span>';
+  if(estado==='REFERENCIA') return '<span class="est-badge est-ref" title="Registrada en la zona de referencia del LISTADO, fuera del inventario del hato">FUERA DEL HATO</span>';
+  return '<span class="est-badge est-ref">SIN DATO</span>';
+}
+
+function criasSectionHtml(a){
+  const crias = criasDe(a.nombre);
+  const esMadre = a.sexo==='H';
+  const otroLbl = esMadre ? 'Padre' : (a.sexo==='M' ? 'Madre' : 'Otro progenitor');
+  if(crias.length===0){
+    return `<div class="section-label">Crías registradas</div>
+      <p style="font-size:13px;color:var(--cuero-700);">No hay crías registradas de ${a.nombre} en el LISTADO.</p>`;
+  }
+  const act = crias.filter(c=>c.estado==='ACTIVO').length;
+  const inact = crias.filter(c=>c.estado==='INACTIVO').length;
+  const ref = crias.filter(c=>c.estado==='REFERENCIA').length;
+  const sinDato = crias.length - act - inact - ref;
+  const card = (n,l)=>`<div class="crias-card"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+  const filas = crias.map((c,i)=>{
+    const k = normKey(a.nombre);
+    const otro = normKey(c.padre)===k ? c.madre : c.padre;
+    const nom = c.enHato
+      ? `<button class="link-btn" onclick="openFicha('${c.nombre.replace(/'/g,"\\'")}')">${c.nombre}</button>${c.nueva?' <small style="color:var(--cuero-700);">(nueva)</small>':''}`
+      : c.nombre;
+    return `<tr>
+      <td>${i+1}</td>
+      <td>${nom}</td>
+      <td>${c.sexo ? sexoLabel(c.sexo) : '—'}</td>
+      <td>${c.fecha_nac ? fmtDate(c.fecha_nac) : '—'}</td>
+      <td>${otro||'Sin registro'}</td>
+      <td>${c.calif_final!=null ? nota(c.calif_final) : '—'}</td>
+      <td>${estadoBadge(c.estado)}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="section-label">Crías registradas <span style="font-size:13px;font-weight:600;color:var(--cuero-700);font-family:var(--sans);">(${crias.length})</span></div>
+    <div class="crias-cards">
+      ${card(crias.length,'Total')}
+      ${card(act,'Activas')}
+      ${card(inact,'Inactivas')}
+      ${ref?card(ref,'Fuera del hato'):''}
+      ${sinDato?card(sinDato,'Sin dato'):''}
+    </div>
+    <div class="crias-wrap"><table class="reg">
+      <thead><tr><th style="width:36px;">#</th><th>Cría</th><th>Sexo</th><th>Nacimiento</th><th>${otroLbl}</th><th>Calif. final</th><th>Estado</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table></div>
+    ${ref?'<p style="font-size:12px;color:var(--cuero-700);margin-top:8px;">«Fuera del hato» = la cría está en la zona de referencia del LISTADO (no en el inventario), así que no tiene estado activo/inactivo asignado.</p>':''}`;
+}
+
+
+// =====================================================================
+// PÁGINA DE PRESENTACIÓN (datos básicos + pedigrí a 4 generaciones)
+// =====================================================================
+let presAnimal = null, presFotoURL = null;
+const PRES_LOGO = '<svg viewBox="0 0 106 111" xmlns="http://www.w3.org/2000/svg"><polygon fill="#890016" points="0,0 25,0 25,43 68,0 100,0 58.8,41.2 105.3,111 74.4,111 41.5,58.5 25,80 25,111 0,111"/></svg>';
+const PRES_REP_COLORS = ['#890016','#2f6b8a','#5b7a2e','#8a5a12','#6a3f8a','#1f7a6e','#a13d6b','#4a4a8a'];
+
+function presPedigri(name){
+  // Devuelve arreglos por generación: gen[1]=[padre,madre], gen[2]=4, gen[3]=8, gen[4]=16
+  const gen = {0:[name]};
+  for(let g=1; g<=4; g++){
+    gen[g] = [];
+    gen[g-1].forEach(n=>{
+      const e = n ? getRefEntry(n) : null;
+      gen[g].push(e && e.padre ? e.padre : null, e && e.madre ? e.madre : null);
+    });
+  }
+  return gen;
+}
+
+function renderPresentacion(name){
+  const a = getAnimal(name);
+  if(!a) return;
+  presAnimal = a.nombre;
+  const gen = presPedigri(a.nombre);
+
+  // Ancestros repetidos dentro de las 4 generaciones
+  const apar = new Map();
+  for(let g=1; g<=4; g++) gen[g].forEach(n=>{
+    const k = normKey(n); if(!k) return;
+    if(!apar.has(k)) apar.set(k,{nombre:n, gens:[]});
+    apar.get(k).gens.push(g);
+  });
+  const reps = [...apar.values()].filter(r=>r.gens.length>1);
+  const repColor = new Map();
+  reps.forEach((r,i)=> repColor.set(normKey(r.nombre), {c:PRES_REP_COLORS[i%PRES_REP_COLORS.length], letra:String.fromCharCode(65+i)}));
+
+  const esH = a.sexo==='H';
+  const f = inbreeding(a.nombre);
+  const facts = [
+    ['Sexo', sexoLabel(a.sexo)],
+    ['Nacimiento', a.fecha_nac ? fmtDate(a.fecha_nac) : null],
+    ['Edad', a.fecha_nac ? ageLabel(a.fecha_nac) : null],
+    ['Raza / andar', a.raza],
+    ['Registro #', a.registro],
+    ['Calif. conformación', a.calif_conf!=null ? nota(a.calif_conf) : null],
+    ['Calif. paso', a.calif_paso!=null ? nota(a.calif_paso) : null],
+    ['Calif. final', a.calif_final!=null ? nota(a.calif_final) : null],
+    ['Consanguinidad (F)', (a.padre && a.madre) ? pct(f) : null],
+  ].filter(x=>x[1]!=null && x[1]!=='' && x[1]!=='—');
+
+  // Celdas del pedigrí en una grilla de 16 filas
+  const span = {1:8, 2:4, 3:2, 4:1};
+  const rolesG1 = ['Padre','Madre'];
+  let cells = '';
+  for(let g=1; g<=4; g++){
+    gen[g].forEach((n,i)=>{
+      const row = i*span[g]+1;
+      const hembra = i%2===1;
+      const k = normKey(n);
+      const rc = k ? repColor.get(k) : null;
+      const rol = g===1 ? `<span class="rol">${rolesG1[i]}</span>` : '';
+      const box = n
+        ? `<div class="pres-box${rc?' rep':''}" ${rc?`style="--rep-bg:${rc.c}14;--rep-c:${rc.c};border-color:${rc.c}88;"`:''}>${rc?`<span class="rmark">${rc.letra}</span>`:''}${rol}${escHtml(n)}</div>`
+        : `<div class="pres-box unk">${rol}Sin registro</div>`;
+      cells += `<div class="pres-cell g${g}${hembra?' h':''}" style="grid-column:${g};grid-row:${row} / span ${span[g]};">${box}</div>`;
+    });
+  }
+
+  const repsTxt = reps.length
+    ? 'Ancestros repetidos: ' + reps.map(r=>`<b style="color:${repColor.get(normKey(r.nombre)).c}">${repColor.get(normKey(r.nombre)).letra}</b> ${escHtml(r.nombre)} (${r.gens.join('×')})`).join(' · ')
+    : 'Sin ancestros repetidos dentro de las 4 generaciones.';
+  const hoy = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'long',day:'numeric'});
+
+  document.getElementById('presSheet').innerHTML = `
+    <div class="pres-head">
+      <div class="pres-main">
+        <div class="pres-brand">${PRES_LOGO}<span>Criadero El Revuelo · Caballo de Paso Fino Colombiano</span></div>
+        <div>
+          <div class="pres-name">${escHtml(a.nombre)}</div>
+          <div class="pres-sub">${esH?'Hija de':'Hijo de'} <b>${escHtml(a.padre||'—')}</b> y <b>${escHtml(a.madre||'—')}</b></div>
+        </div>
+        <div class="pres-facts" style="grid-template-columns:repeat(${facts.length<=6?Math.max(facts.length,1):Math.ceil(facts.length/2)},1fr);">
+          ${facts.map(x=>`<div class="pres-fact"><div class="l">${x[0]}</div><div class="v">${escHtml(x[1])}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="pres-photo ${presFotoURL?'':'empty'}">${presFotoURL?`<img src="${presFotoURL}" alt="">`:''}</div>
+    </div>
+    <div class="pres-ped-title">Pedigrí — 4 generaciones <small>Línea paterna arriba · línea materna abajo</small></div>
+    <div class="pres-ped" id="presPed">${cells}</div>
+    <div class="pres-foot"><div class="pres-reps">${repsTxt}</div><div style="white-space:nowrap;">Generado el ${hoy}</div></div>`;
+  document.getElementById('presQuitarFoto').style.display = presFotoURL ? '' : 'none';
+  requestAnimationFrame(presConectores);
+}
+
+// Líneas verticales que unen a cada par de padres (se miden en pantalla)
+function presConectores(){
+  const ped = document.getElementById('presPed'); if(!ped) return;
+  ped.querySelectorAll('.pres-vline').forEach(x=>x.remove());
+  const pr = ped.getBoundingClientRect();
+  const sc = pr.width / ped.offsetWidth || 1;
+  for(let g=2; g<=4; g++){
+    const cs = [...ped.querySelectorAll('.pres-cell.g'+g)];
+    for(let i=0;i<cs.length;i+=2){
+      const r1 = cs[i].getBoundingClientRect(), r2 = cs[i+1].getBoundingClientRect();
+      const y1 = (r1.top + r1.height/2 - pr.top)/sc, y2 = (r2.top + r2.height/2 - pr.top)/sc;
+      const x = (r1.left - pr.left)/sc - 2.5*3.7795;
+      const v = document.createElement('div');
+      v.className = 'pres-vline';
+      v.style.cssText = `left:${x}px;top:${y1}px;height:${y2-y1}px;`;
+      ped.appendChild(v);
+    }
+  }
+}
+
+function presAjustarEscala(){
+  const s = document.getElementById('presSheet');
+  const disp = document.querySelector('.pres-sheet-wrap').clientWidth - 20;
+  const w = s.offsetWidth;
+  const k = Math.min(1, disp / w);
+  s.style.transform = k<1 ? `scale(${k})` : '';
+  s.style.marginLeft = k<1 ? '0' : '';
+  s.parentElement.style.height = k<1 ? (s.offsetHeight*k + 40)+'px' : '';
+}
+
+function abrirPresentacion(name){
+  presFotoURL = null;
+  document.getElementById('presFoto').value = '';
+  document.getElementById('presOverlay').classList.add('open');
+  document.body.classList.add('presentando');
+  document.body.style.overflow = 'hidden';
+  renderPresentacion(name);
+  presAjustarEscala();
+}
+window.abrirPresentacion = abrirPresentacion;
+function cerrarPresentacion(){
+  document.getElementById('presOverlay').classList.remove('open');
+  document.body.classList.remove('presentando');
+  document.body.style.overflow = '';
+}
+document.getElementById('presCerrar').addEventListener('click', cerrarPresentacion);
+document.getElementById('presPdf').addEventListener('click', ()=>{
+  const t = document.title;
+  document.title = 'Presentacion - ' + (presAnimal||'');
+  const s = document.getElementById('presSheet'); s.style.transform=''; s.style.marginLeft='';
+  setTimeout(()=>{ window.print(); document.title = t; presAjustarEscala(); }, 50);
+});
+document.getElementById('presFoto').addEventListener('change', e=>{
+  const file = e.target.files && e.target.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = ()=>{ presFotoURL = r.result; renderPresentacion(presAnimal); };
+  r.readAsDataURL(file);
+});
+document.getElementById('presQuitarFoto').addEventListener('click', ()=>{ presFotoURL=null; document.getElementById('presFoto').value=''; renderPresentacion(presAnimal); });
+window.addEventListener('resize', ()=>{ if(document.getElementById('presOverlay').classList.contains('open')) presAjustarEscala(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && document.getElementById('presOverlay').classList.contains('open')) cerrarPresentacion(); });
 
 let fichaTreeDepth = 6;
 
@@ -2081,6 +2499,10 @@ function renderFicha(name){
       return `<div class="info-grid">${fields.map(f=>`<div class="info-cell"><div class="l">${f.label}</div><div class="v">${f.value}</div></div>`).join('')}</div>`;
     })()}
 
+    <div style="margin:-8px 0 8px;"><button class="btn" onclick="abrirPresentacion('${a.nombre.replace(/'/g,"\\'")}')">📄 Página de presentación · exportar PDF</button></div>
+
+    ${criasSectionHtml(a)}
+
     <div class="section-label">Árbol genealógico</div>
     <div class="tree-depth-control">
       <span>Generaciones a mostrar:</span>
@@ -2102,7 +2524,8 @@ function renderFicha(name){
     <div id="fichaCriticalMass"></div>
 
     <div class="btn-row">
-      <button class="btn" onclick="window.print()">Descargar / imprimir PDF</button>
+      <button class="btn" onclick="abrirPresentacion('${a.nombre.replace(/'/g,"\\'")}')">📄 Página de presentación (PDF)</button>
+      <button class="btn ghost" onclick="window.print()">Imprimir ficha completa</button>
       <button class="btn ghost" onclick="document.getElementById('simSireSearch').value='${a.nombre.replace(/'/g,"\\'")}'; document.querySelector('.tab-btn[data-view=simulador]').click(); pickSim('sire','${a.nombre.replace(/'/g,"\\'")}');">Usar como padre en simulador</button>
       <button class="btn ghost" onclick="document.getElementById('simDamSearch').value='${a.nombre.replace(/'/g,"\\'")}'; document.querySelector('.tab-btn[data-view=simulador]').click(); pickSim('dam','${a.nombre.replace(/'/g,"\\'")}');">Usar como madre en simulador</button>
     </div>
@@ -2732,7 +3155,7 @@ function renderGlobalSearchResults(qRaw){
   if(!q){
     matches = RAW.slice().sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||'')).slice(0,10);
   } else {
-    matches = RAW.filter(a=>(a.nombre||'').toLowerCase().includes(q)).slice(0,12);
+    matches = buscarAnimales(qRaw, 15);
   }
   if(matches.length===0){
     gsResults.innerHTML = '<div class="global-search-item" style="cursor:default;color:var(--cuero-700);">Sin resultados en el hato activo.</div>';
@@ -2740,9 +3163,12 @@ function renderGlobalSearchResults(qRaw){
   }
   gsResults.innerHTML = matches.map(a=>{
     const f = inbreeding(a.nombre);
-    return `<div class="global-search-item" data-name="${a.nombre.replace(/"/g,'&quot;')}">
-      <b>${a.nombre}</b>
-      <small>${sexoLabel(a.sexo)} · ${a.raza||'—'} · F ${pct(f)} · ${a.activo||'Sin dato'}</small>
+    const nc = criasDe(a.nombre);
+    const act = nc.filter(c=>c.estado==='ACTIVO').length;
+    const ncTxt = nc.length ? ` · ${nc.length} cría${nc.length>1?'s':''} (${act} activa${act===1?'':'s'})` : '';
+    return `<div class="global-search-item" data-name="${escHtml(a.nombre)}">
+      <b>${resaltar(a.nombre, qRaw)}</b>
+      <small>${sexoLabel(a.sexo)} · ${a.raza||'—'} · F ${pct(f)} · ${a.activo||'Sin dato'}${ncTxt}</small>
     </div>`;
   }).join('');
   gsResults.querySelectorAll('.global-search-item[data-name]').forEach(el=>{
@@ -2755,6 +3181,7 @@ function renderGlobalSearchResults(qRaw){
 gsFab.addEventListener('click', openGlobalSearch);
 gsOverlay.addEventListener('click', e=>{ if(e.target===gsOverlay) closeGlobalSearch(); });
 gsInput.addEventListener('input', e=> renderGlobalSearchResults(e.target.value));
+navTeclado(gsInput, gsResults, '.global-search-item[data-name]', it=>{ closeGlobalSearch(); openFicha(it.dataset.name); });
 document.addEventListener('keydown', e=>{
   if(e.key === 'Escape' && gsOverlay.classList.contains('open')){ closeGlobalSearch(); return; }
   const typing = ['INPUT','TEXTAREA'].includes(document.activeElement.tagName);
