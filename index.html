@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>if(window.navigator.standalone||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("app")</script>
 
 <!-- Icono de la app en la pantalla de inicio del celular y en la pestana del navegador.
      Van incrustados para que el archivo siga siendo autonomo: si solo subes este HTML,
@@ -556,6 +557,14 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
 .instalar-banner .no{background:transparent;color:#cdb9a0;}
 @media print{.instalar-banner,.ed-edit-btn,.ed-footer-btn{display:none!important;}}
 
+
+/* En la app instalada (pantalla de inicio) se oculta el encabezado */
+@media (display-mode: standalone), (display-mode: fullscreen){
+  .hero{display:none}
+  body{padding-top:env(safe-area-inset-top,0px)}
+}
+html.app .hero{display:none}
+html.app body{padding-top:env(safe-area-inset-top,0px)}
 </style>
 </head>
 <body>
