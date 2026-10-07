@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <!-- Icono de la app en la pantalla de inicio del celular y en la pestana del navegador.
      Van incrustados para que el archivo siga siendo autonomo: si solo subes este HTML,
@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#890016">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="El Revuelo">
 <meta name="application-name" content="El Revuelo">
 <meta name="description" content="Programa de cria y analisis genealogico del Criadero El Revuelo — Paso Fino Colombiano.">
@@ -53,7 +53,7 @@ body{min-height:100vh;}
     linear-gradient(180deg, rgba(36,24,19,.86), rgba(36,24,19,.93)),
     repeating-linear-gradient(135deg, rgba(184,137,74,.10) 0 2px, transparent 2px 26px);
   color:var(--crema);
-  padding:34px 28px 26px;
+  padding:calc(34px + env(safe-area-inset-top)) calc(28px + env(safe-area-inset-right)) 26px calc(28px + env(safe-area-inset-left));
   border-bottom:4px solid var(--oro);
   position:relative;
 }
@@ -77,8 +77,12 @@ body{min-height:100vh;}
 .tabbar{
   background:var(--cuero-900);
   border-bottom:1px solid var(--cuero-800);
-  position:sticky;top:0;z-index:40;
+  position:sticky;top:env(safe-area-inset-top);z-index:40;
 }
+/* En modo app (pantalla completa) la franja de la hora y la batería queda
+   sobre el mismo café del encabezado, como en una app nativa. */
+body::before{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top);
+  background:var(--cuero-950);z-index:60;pointer-events:none;}
 .tabbar-inner{max-width:1280px;margin:0 auto;display:flex;gap:2px;padding:0 20px;overflow-x:auto;}
 .tab-btn{
   background:none;border:none;color:#cdb9a0;font-family:var(--sans);font-size:13.5px;font-weight:600;
@@ -497,6 +501,61 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
 .cr-modal-acc{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
 @media print{.cr-acciones,.cr-toolbar,.cr-toast{display:none!important;}}
 
+/* =================== EDICIÓN DE ANIMALES Y SINCRONIZACIÓN =================== */
+.ed-box{width:min(640px,100%);min-width:0;max-width:100%;}
+.ed-box .btn{white-space:normal;}
+/* La tabla de nicks era más ancha que el celular y obligaba a alejar toda la página. */
+#nicksCard{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+@media (max-width:560px){ .zoom-controls{flex-wrap:wrap;} table.contrib{display:block;overflow-x:auto;max-width:100%;} }
+@media (max-width:560px){ .cr-modal{padding:calc(14px + env(safe-area-inset-top)) 10px 24px;} .ed-box{padding:20px 16px;} .ed-btns .btn{flex:1 1 140px;text-align:center;} }
+.ed-sec{margin-top:20px;padding-top:14px;border-top:1px solid var(--linea);}
+.ed-sec h4{margin:0 0 2px;font-family:var(--serif);font-weight:400;font-size:16px;color:var(--cuero-900);}
+.ed-sec .ayuda{font-size:12px;color:var(--cuero-700);margin:0;}
+.ed-notas{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:4px 12px;}
+.ed-notas .cr-field{margin-top:10px;}
+.ed-califs{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.ed-calif{flex:1;min-width:110px;background:var(--papel);border:1px solid var(--linea);border-radius:9px;padding:9px 12px;}
+.ed-calif .n{font-family:var(--serif);font-size:22px;color:var(--cuero-900);line-height:1.1;}
+.ed-calif .l{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--cuero-700);}
+.ed-aviso{font-size:12px;color:var(--verde-pasto);margin-top:6px;min-height:0;}
+.cr-field textarea{width:100%;font-family:var(--sans);font-size:13.5px;padding:9px 11px;border:1px solid var(--linea);
+  border-radius:8px;background:#fff;color:var(--cuero-900);box-sizing:border-box;resize:vertical;min-height:62px;}
+.cr-field input:disabled{background:var(--crema-2);color:var(--cuero-700);}
+.ed-peligro{margin-right:auto;color:var(--rojo-alerta) !important;border-color:#e0c4bb !important;}
+.ed-edit-btn{margin-top:14px;background:transparent !important;color:var(--oro-2) !important;border:1px solid rgba(212,166,86,.55) !important;}
+.ed-sync-estado{display:flex;gap:10px;align-items:flex-start;background:var(--papel);border:1px solid var(--linea);
+  border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13px;color:var(--cuero-800);line-height:1.45;}
+.ed-sync-estado .punto{width:9px;height:9px;border-radius:50%;background:#c9a227;flex:none;margin-top:5px;}
+.ed-sync-estado.ok .punto{background:#2f6b3a;}
+.ed-sync-estado.local .punto{background:#9aa08f;}
+.ed-lista{margin-top:10px;max-height:240px;overflow:auto;border:1px solid var(--linea);border-radius:9px;background:#fff;}
+.ed-lista-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--crema-2);font-size:13px;}
+.ed-lista-item:last-child{border-bottom:none;}
+.ed-lista-item .nom{flex:1;min-width:0;}
+.ed-lista-item .nom b{display:block;color:var(--cuero-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ed-lista-item .nom span{font-size:11.5px;color:var(--cuero-700);}
+.ed-lista-item button{font-size:12px;padding:5px 10px;}
+.ed-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.ed-footer-btn{background:none;border:1px solid var(--linea);border-radius:16px;padding:5px 12px;font-family:var(--sans);
+  font-size:12px;color:var(--cuero-800);cursor:pointer;margin-top:8px;}
+.ed-badge{display:inline-block;min-width:18px;padding:1px 6px;border-radius:9px;background:var(--ambar-alerta);color:#fff;
+  font-size:11px;font-weight:700;margin-left:4px;}
+.ed-badge:empty{display:none;}
+.ed-tag-nuevo{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.4px;padding:1px 7px;border-radius:8px;
+  background:#e3ead8;color:var(--verde-pasto);margin-left:6px;vertical-align:middle;}
+
+/* Aviso para instalar como app (quita la barra del navegador) */
+.instalar-banner{display:none;position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:9000;
+  background:var(--cuero-900);color:var(--crema);border-radius:14px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.3);
+  max-width:520px;margin:0 auto;font-size:13px;line-height:1.45;}
+.instalar-banner.open{display:block;}
+.instalar-banner b{color:var(--oro-2);}
+.instalar-banner .acc{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;}
+.instalar-banner button{font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:8px 14px;cursor:pointer;border:none;}
+.instalar-banner .si{background:var(--oro-2);color:var(--cuero-950);}
+.instalar-banner .no{background:transparent;color:#cdb9a0;}
+@media print{.instalar-banner,.ed-edit-btn,.ed-footer-btn{display:none!important;}}
+
 </style>
 </head>
 <body>
@@ -629,6 +688,8 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
         <span class="pill" data-raza="P4">P4 (puro)</span>
         <span class="pill" data-raza="DIAGONAL">Diagonales (P1–P3)</span>
       </div>
+      <button class="btn" onclick="edAbrirNuevo()">＋ Nuevo animal</button>
+      <button class="btn ghost" onclick="edAbrirSync()">☁ Datos<span class="ed-badge ed-pend"></span></button>
       <button class="btn ghost" id="invExport">Exportar CSV</button>
     </div>
     <div class="stat-grid" id="invSummary" style="margin-bottom:18px;"></div>
@@ -856,8 +917,142 @@ table.contrib td{padding:8px 10px;border-bottom:1px solid var(--linea);}
 
 </main>
 
+
+<!-- Modal: agregar / editar animal -->
+<div class="cr-modal" id="edModal">
+  <div class="cr-modal-box ed-box">
+    <h3 id="edTitulo">Nuevo animal</h3>
+    <p style="font-size:12.5px;color:var(--cuero-700);margin:0;" id="edSubtitulo">Queda guardado en este celular al instante, aunque no haya señal.</p>
+    <input type="hidden" id="edModo">
+    <div class="cr-field">
+      <label>Nombre</label>
+      <input type="text" id="edNombre" placeholder="Ej. ARMONIA DEL REVUELO" autocomplete="off" style="text-transform:uppercase;">
+      <div class="ed-aviso" id="edNombreAviso"></div>
+    </div>
+    <div class="cr-row2">
+      <div class="cr-field">
+        <label>Sexo</label>
+        <select id="edSexo"><option value="">Selecciona…</option><option value="H">Hembra</option><option value="M">Macho</option></select>
+      </div>
+      <div class="cr-field">
+        <label>Fecha de nacimiento</label>
+        <input type="date" id="edFecha">
+      </div>
+    </div>
+    <div class="cr-row2">
+      <div class="cr-field">
+        <label>Raza</label>
+        <select id="edRaza">
+          <option value="">Sin dato</option>
+          <option value="P4">P4 · Paso Fino puro</option>
+          <option value="P3">P3</option>
+          <option value="P2">P2</option>
+          <option value="P1">P1</option>
+          <option value="E">E · Otro / mestizo</option>
+        </select>
+      </div>
+      <div class="cr-field">
+        <label>Estado</label>
+        <select id="edActivo"><option value="ACTIVO">Activo</option><option value="INACTIVO">Inactivo</option></select>
+      </div>
+    </div>
+    <div class="cr-row2">
+      <div class="cr-field">
+        <label>Padre</label>
+        <input type="text" id="edPadre" list="edListaPadres" autocomplete="off" placeholder="Escribe para buscar" style="text-transform:uppercase;">
+      </div>
+      <div class="cr-field">
+        <label>Madre</label>
+        <input type="text" id="edMadre" list="edListaMadres" autocomplete="off" placeholder="Escribe para buscar" style="text-transform:uppercase;">
+      </div>
+    </div>
+    <div class="ed-aviso" id="edPadresAviso"></div>
+    <div class="cr-row2">
+      <div class="cr-field">
+        <label>Registro #</label>
+        <input type="text" id="edRegistro" placeholder="Opcional">
+      </div>
+    </div>
+    <div class="cr-field">
+      <label>Comentario</label>
+      <textarea id="edComentario" placeholder="Opcional"></textarea>
+    </div>
+
+    <div class="ed-sec">
+      <h4>Calificaciones</h4>
+      <p class="ayuda">Deja en blanco lo que no se ha calificado. Las calificaciones de Paso, Conformación y Final se calculan solas con las mismas ponderaciones del Excel.</p>
+      <div class="ed-notas" id="edNotasPaso"></div>
+      <div class="ed-notas" id="edNotasConf" style="margin-top:6px;"></div>
+      <div class="ed-califs">
+        <div class="ed-calif"><div class="n" id="edCalPaso">—</div><div class="l">Calif. Paso</div></div>
+        <div class="ed-calif"><div class="n" id="edCalConf">—</div><div class="l">Calif. Conformación</div></div>
+        <div class="ed-calif"><div class="n" id="edCalFinal">—</div><div class="l">Calif. Final</div></div>
+      </div>
+    </div>
+
+    <div class="cr-err" id="edError"></div>
+    <div class="cr-modal-acc">
+      <button class="btn ghost ed-peligro" id="edBorrar" style="display:none;" onclick="edBorrarActual()">Eliminar</button>
+      <button class="btn ghost" onclick="edCerrar()">Cancelar</button>
+      <button class="btn" onclick="edGuardar()">Guardar</button>
+    </div>
+  </div>
+</div>
+<datalist id="edListaPadres"></datalist>
+<datalist id="edListaMadres"></datalist>
+
+<!-- Modal: datos y sincronización -->
+<div class="cr-modal" id="edSyncModal">
+  <div class="cr-modal-box ed-box">
+    <h3>Datos y sincronización</h3>
+    <div class="ed-sync-estado" id="edSyncEstado"><span class="punto"></span><div id="edSyncTexto"></div></div>
+
+    <div class="ed-sec">
+      <h4>Cambios hechos desde la app</h4>
+      <div class="ed-lista" id="edSyncLista"></div>
+      <div class="ed-btns">
+        <button class="btn" id="edSyncAhora" onclick="edSincronizar({manual:true})">☁ Sincronizar ahora</button>
+        <button class="btn ghost" onclick="edExportarCSV()">Filas para Excel (CSV)</button>
+        <button class="btn ghost" onclick="edExportarJSON()">Descargar respaldo</button>
+        <label class="btn ghost">Importar respaldo<input type="file" accept="application/json,.json" hidden onchange="edImportarJSON(event)"></label>
+      </div>
+    </div>
+
+    <div class="ed-sec">
+      <h4>Compartir entre celulares y computador</h4>
+      <p class="ayuda">Con una llave de GitHub, cada cambio se guarda también en el repositorio del tablero (archivo <b>cambios.json</b>) y aparece en todos tus dispositivos. Sin llave, los cambios se quedan solo en este dispositivo. La llave se guarda únicamente aquí.</p>
+      <div class="cr-row2">
+        <div class="cr-field"><label>Usuario de GitHub</label><input type="text" id="edCfgOwner" autocomplete="off"></div>
+        <div class="cr-field"><label>Repositorio</label><input type="text" id="edCfgRepo" autocomplete="off"></div>
+      </div>
+      <div class="cr-field">
+        <label>Llave (token) de GitHub</label>
+        <input type="password" id="edCfgToken" autocomplete="off" placeholder="github_pat_…">
+      </div>
+      <div class="ed-btns">
+        <button class="btn" onclick="edGuardarConfig()">Guardar llave</button>
+        <button class="btn ghost" onclick="edOlvidarToken()">Quitar llave de este dispositivo</button>
+      </div>
+    </div>
+
+    <div class="cr-modal-acc">
+      <button class="btn ghost" onclick="edCerrarSync()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Aviso de instalación como app -->
+<div class="instalar-banner" id="instalarBanner">
+  <div id="instalarTexto"></div>
+  <div class="acc">
+    <button class="no" id="instalarNo">Ahora no</button>
+    <button class="si" id="instalarSi">Instalar</button>
+  </div>
+</div>
+
 <footer class="app-footer">
   <div id="offlineChip" class="offline-chip"><span class="punto"></span><span id="offlineTexto"></span></div>
+  <button class="ed-footer-btn" onclick="edAbrirSync()">☁ Datos y sincronización<span class="ed-badge ed-pend"></span></button>
   <div style="margin-top:8px;">Desarrollado por Daniel Jaramillo Williamson</div>
 </footer>
 
@@ -2028,7 +2223,7 @@ function renderInventario(){
     const tag = coiTag(f);
     return `<tr>
       <td><span class="sex-badge ${a.sexo||'na'}">${a.sexo || '·'}</span></td>
-      <td><button class="link-btn" onclick="openFicha('${a.nombre.replace(/'/g,"\\'")}')">${a.nombre}</button></td>
+      <td><button class="link-btn" onclick="openFicha('${a.nombre.replace(/'/g,"\\'")}')">${a.nombre}</button>${a._edNuevo ? '<span class="ed-tag-nuevo">NUEVO</span>' : ''}</td>
       <td>${a.raza||'—'}</td>
       <td>${fmtDate(a.fecha_nac)}</td>
       <td>${ageLabel(a.fecha_nac)}</td>
@@ -2036,7 +2231,7 @@ function renderInventario(){
       <td style="color:var(--cuero-700);">${a.madre||'—'}</td>
       <td><span class="status-chip ${a.activo||'na'}">${a.activo||'Sin dato'}</span></td>
       <td><span class="status-chip" style="background:${coiColors[tag.cls].bg};color:${coiColors[tag.cls].fg};">${pct(f)}</span></td>
-      <td><button class="link-btn" onclick="openFicha('${a.nombre.replace(/'/g,"\\'")}')">Ver ficha →</button></td>
+      <td style="white-space:nowrap;"><button class="link-btn" onclick="openFicha('${a.nombre.replace(/'/g,"\\'")}')">Ver ficha →</button> <button class="link-btn" title="Editar" onclick="edAbrirEditar('${a.nombre.replace(/'/g,"\\'")}')">✎</button></td>
     </tr>`;
   }).join('') || '<tr><td colspan="10" style="text-align:center;padding:30px;color:var(--cuero-700);">Sin resultados.</td></tr>';
 }
@@ -2476,6 +2671,7 @@ function renderFicha(name){
           <span>Padre: <b>${a.padre||'Sin registro'}</b></span>
           <span>Madre: <b>${a.madre||'Sin registro'}</b></span>
         </div>
+        <button class="btn ghost ed-edit-btn" onclick="edAbrirEditar(currentFichaAnimal)">✎ Editar datos</button>
       </div>
       <div class="coi-badge">
         <div class="val">${pct(f)}</div>
@@ -3906,6 +4102,629 @@ renderPrograma();
       });
     });
   }).catch(()=>{ pintarConexion(); });
+})();
+
+
+// =====================================================================
+// EDICIÓN DE ANIMALES — editar datos y agregar animales desde la app
+//
+// Los datos del Excel vienen incrustados en este HTML. Lo que se cambia
+// desde la app se guarda aparte, como una capa encima:
+//   1. al instante en el dispositivo (funciona sin señal), y
+//   2. si hay llave de GitHub, en cambios.json del repositorio, para que
+//      el celular y el computador vean lo mismo.
+// Cada animal guarda la hora de su último cambio; al juntar lo de dos
+// dispositivos gana el cambio más reciente de cada animal.
+// =====================================================================
+const ED_KEY = 'elrevuelo_ediciones_v1';
+const ED_CFG_KEY = 'elrevuelo_sync_cfg_v1';
+const ED_ARCHIVO = 'cambios.json';
+
+const ED_PASO = [['pulimento','Pulimento',0.20],['elasticidad','Elasticidad',0.25],['manos','Manos',0.25],['rapidez','Rapidez',0.30]];
+const ED_CONF = [['temp','Temperamento',0.25],['brio','Brío',0.20],['caract','Carácter',0.10],['conf_rasgo','Conformación',0.15],['tamano','Tamaño',0.20],['aplomo','Aplomos',0.10]];
+const ED_CAMPOS = ['fecha_nac','raza','sexo','padre','madre','activo','registro','comentario',
+  ...ED_PASO.map(x=>x[0]), ...ED_CONF.map(x=>x[0]), 'calif_conf','calif_paso','calif_final'];
+
+// Copia de cómo venía cada animal del Excel, para poder deshacer un cambio.
+const ED_ORIG = new Map();
+RAW.forEach(a=>{
+  const k = normKey(a.nombre); if(!k || ED_ORIG.has(k)) return;
+  const o = {}; ED_CAMPOS.forEach(c=>o[c] = a[c] === undefined ? null : a[c]);
+  ED_ORIG.set(k, o);
+});
+
+let edDB = { version:1, animales:{} };   // clave normalizada -> {nombre, estado, campos, ts, subido}
+let edCfg = { owner:'', repo:'', branch:'main', token:'' };
+let edUltimaSync = null;                 // última vez que se habló con GitHub
+let edSyncEnCurso = null;
+
+function edLoad(){
+  try{ const r = crRawGet(ED_KEY); if(r){ const p = JSON.parse(r); if(p && p.animales) edDB = { version:1, animales:p.animales }; edUltimaSync = p.ultimaSync || null; } }
+  catch(e){ console.warn('No se pudieron leer las ediciones guardadas', e); }
+  try{ const r = crRawGet(ED_CFG_KEY); if(r) Object.assign(edCfg, JSON.parse(r)); }catch(e){}
+  if(!edCfg.owner || !edCfg.repo){
+    const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+    const seg = location.pathname.split('/').filter(Boolean)[0];
+    edCfg.owner = edCfg.owner || (m ? m[1] : 'danieljaramillow');
+    edCfg.repo = edCfg.repo || (m && seg && !/\.html?$/i.test(seg) ? seg : 'ELREVUELO');
+  }
+}
+function edSave(){ crRawSet(ED_KEY, JSON.stringify({ version:1, animales:edDB.animales, ultimaSync:edUltimaSync })); }
+function edSaveCfg(){ crRawSet(ED_CFG_KEY, JSON.stringify(edCfg)); }
+function edPendientes(){ return Object.values(edDB.animales).filter(e=>!e.subido); }
+
+function edNum(v){ return (v===null || v===undefined || v==='') ? null : Number(v); }
+function edCalifs(c){
+  const grupo = (lista)=>{
+    if(lista.some(([k])=>c[k]==null)) return null;
+    return lista.reduce((s,[k,,w])=>s + c[k]*w, 0);
+  };
+  const paso = grupo(ED_PASO), conf = grupo(ED_CONF);
+  return { calif_paso:paso, calif_conf:conf, calif_final:(paso!=null && conf!=null) ? (paso+conf)/2 : null };
+}
+
+// ---------------------------------------------------------------------
+// Aplicar la capa de cambios sobre los datos del Excel
+// ---------------------------------------------------------------------
+function edSetPadres(nombre, padre, madre){
+  const k = normKey(nombre);
+  const ref = PARENTS_INDEX.get(k);
+  if(ref){ ref.padre = padre || null; ref.madre = madre || null; }
+  else if(padre || madre){
+    const nuevo = { nombre, padre: padre || null, madre: madre || null, origen:'hato' };
+    PEDIGREE_INDEX.push(nuevo); PARENTS_INDEX.set(k, nuevo);
+  }
+}
+function edAplicarUno(k, e){
+  const a = BY_NAME.get(k);
+  if(e.estado === 'borrado'){
+    if(a && a._edNuevo){
+      const i = RAW.indexOf(a); if(i >= 0) RAW.splice(i,1);
+      BY_NAME.delete(k);
+      const iP = PEDIGREE_INDEX.findIndex(p=>normKey(p.nombre)===k && p._edNuevo);
+      if(iP >= 0){ PEDIGREE_INDEX.splice(iP,1); PARENTS_INDEX.delete(k); }
+    }
+    return;
+  }
+  if(e.estado === 'revertido'){
+    const o = ED_ORIG.get(k);
+    if(a && o){ Object.assign(a, o); edSetPadres(a.nombre, o.padre, o.madre); }
+    return;
+  }
+  if(a){
+    Object.assign(a, e.campos);
+    edSetPadres(a.nombre, a.padre, a.madre);
+    return;
+  }
+  if(e.estado === 'nuevo'){
+    const reg = { row:null, nombre:e.nombre, ab_mat:null, peso_dest:null, _edNuevo:true };
+    ED_CAMPOS.forEach(c=>reg[c] = e.campos[c] === undefined ? null : e.campos[c]);
+    RAW.push(reg); BY_NAME.set(k, reg);
+    if(PARENTS_INDEX.has(k)) edSetPadres(reg.nombre, reg.padre, reg.madre);
+    else if(reg.padre || reg.madre){
+      const ref = { nombre:reg.nombre, padre:reg.padre, madre:reg.madre, origen:'hato', _edNuevo:true };
+      PEDIGREE_INDEX.push(ref); PARENTS_INDEX.set(k, ref);
+    }
+  }
+}
+function edAplicarTodo(){
+  Object.entries(edDB.animales).forEach(([k,e])=>edAplicarUno(k,e));
+  crInvalidarCaches();
+}
+function edRefrescarTablero(){
+  crInvalidarCaches();
+  renderPanel(); renderInventario(); renderAnalisis(); renderReproductores(); renderPrograma();
+  if(currentFichaAnimal){
+    if(getAnimal(currentFichaAnimal)) renderFicha(currentFichaAnimal);
+    else { currentFichaAnimal = null; document.getElementById('fichaContent').innerHTML = '<div class="empty-state"><div class="ico">🐎</div>Busca y selecciona un animal para ver su ficha.</div>'; }
+  }
+  const el = document.getElementById('reproTotalHato');
+  if(el) el.textContent = RAW.filter(a=>a.activo === 'ACTIVO').length;
+  edPintarIndicadores();
+}
+
+// ---------------------------------------------------------------------
+// Formulario
+// ---------------------------------------------------------------------
+function edOpcionesNota(){
+  let h = '<option value="">—</option>';
+  for(let v=1; v<=5; v+=0.5) h += `<option value="${v}">${String(v).replace('.',',')}</option>`;
+  return h;
+}
+function edConstruirForm(){
+  const celda = ([k,lbl])=>`<div class="cr-field"><label>${lbl}</label><select id="edN_${k}" onchange="edPreviewCalifs()">${edOpcionesNota()}</select></div>`;
+  document.getElementById('edNotasPaso').innerHTML = ED_PASO.map(celda).join('');
+  document.getElementById('edNotasConf').innerHTML = ED_CONF.map(celda).join('');
+}
+function edLlenarListas(){
+  const padres = new Set(), madres = new Set();
+  RAW.forEach(a=>{ if(a.sexo==='M') padres.add(a.nombre); if(a.sexo==='H') madres.add(a.nombre); if(a.padre) padres.add(a.padre); if(a.madre) madres.add(a.madre); });
+  PEDIGREE_INDEX.forEach(r=>{ if(r.padre) padres.add(r.padre); if(r.madre) madres.add(r.madre); });
+  const op = s=>[...s].map(x=>x.trim()).sort().map(n=>`<option value="${crAttr(n)}">`).join('');
+  document.getElementById('edListaPadres').innerHTML = op(padres);
+  document.getElementById('edListaMadres').innerHTML = op(madres);
+}
+function edLeerNotas(){
+  const c = {};
+  [...ED_PASO, ...ED_CONF].forEach(([k])=>c[k] = edNum(document.getElementById('edN_'+k).value));
+  return c;
+}
+function edPreviewCalifs(){
+  const r = edCalifs(edLeerNotas());
+  document.getElementById('edCalPaso').textContent = r.calif_paso==null ? '—' : nota(r.calif_paso);
+  document.getElementById('edCalConf').textContent = r.calif_conf==null ? '—' : nota(r.calif_conf);
+  document.getElementById('edCalFinal').textContent = r.calif_final==null ? '—' : nota(r.calif_final);
+}
+
+function edAbrirNuevo(){ edAbrir(null); }
+function edAbrirEditar(nombre){ edAbrir(nombre); }
+function edAbrir(nombre){
+  edLlenarListas();
+  const a = nombre ? getAnimal(nombre) : null;
+  if(nombre && !a){ crToast('Ese animal no está en el inventario.'); return; }
+  const v = (id,val)=>{ document.getElementById(id).value = (val==null ? '' : val); };
+  document.getElementById('edModo').value = a ? a.nombre : '';
+  document.getElementById('edTitulo').textContent = a ? 'Editar ' + a.nombre : 'Nuevo animal';
+  document.getElementById('edSubtitulo').textContent = a
+    ? 'El nombre no se cambia aquí porque es el que enlaza el pedigrí.'
+    : 'Queda guardado en este dispositivo al instante, aunque no haya señal.';
+  const nom = document.getElementById('edNombre');
+  nom.value = a ? a.nombre : ''; nom.disabled = !!a;
+  v('edSexo', a && a.sexo);
+  v('edFecha', a && a.fecha_nac ? String(a.fecha_nac).slice(0,10) : '');
+  const raza = document.getElementById('edRaza');
+  const rz = a ? (a.raza||'') : 'P4';
+  if(rz && ![...raza.options].some(o=>o.value===rz)) raza.insertAdjacentHTML('beforeend', `<option value="${crAttr(rz)}">${crEsc(rz)}</option>`);
+  raza.value = rz;
+  v('edActivo', a ? (a.activo||'ACTIVO') : 'ACTIVO');
+  v('edPadre', a && a.padre); v('edMadre', a && a.madre);
+  v('edRegistro', a && a.registro); v('edComentario', a && a.comentario);
+  [...ED_PASO, ...ED_CONF].forEach(([k])=>v('edN_'+k, a && a[k]!=null ? a[k] : ''));
+  // Una nota que no esté en la lista (p. ej. 4.25) se agrega para no perderla.
+  [...ED_PASO, ...ED_CONF].forEach(([k])=>{
+    const sel = document.getElementById('edN_'+k);
+    if(a && a[k]!=null && sel.value===''){ sel.insertAdjacentHTML('beforeend', `<option value="${a[k]}">${a[k]}</option>`); sel.value = String(a[k]); }
+  });
+  document.getElementById('edBorrar').style.display = (a && a._edNuevo) ? '' : 'none';
+  document.getElementById('edNombreAviso').textContent = '';
+  document.getElementById('edPadresAviso').textContent = '';
+  document.getElementById('edError').textContent = '';
+  edPreviewCalifs();
+  document.getElementById('edModal').classList.add('open');
+  if(!a) setTimeout(()=>nom.focus(), 60);
+}
+function edCerrar(){ document.getElementById('edModal').classList.remove('open'); }
+
+// Si el nombre nuevo ya está en la base de pedigrí (p. ej. una yegua
+// comprada que figura como ancestro), se completan padre y madre.
+function edAlEscribirNombre(){
+  const n = normKey(document.getElementById('edNombre').value);
+  const aviso = document.getElementById('edNombreAviso');
+  aviso.textContent = '';
+  if(!n) return;
+  if(BY_NAME.has(n)){ aviso.style.color = 'var(--rojo-alerta)'; aviso.textContent = 'Ya existe en el inventario.'; return; }
+  const ref = PARENTS_INDEX.get(n);
+  if(ref){
+    const p = document.getElementById('edPadre'), m = document.getElementById('edMadre');
+    if(!p.value && ref.padre) p.value = ref.padre;
+    if(!m.value && ref.madre) m.value = ref.madre;
+    aviso.style.color = 'var(--verde-pasto)';
+    aviso.textContent = 'Está en la base de pedigrí: se completaron padre y madre.';
+  }
+}
+function edAvisoPadres(){
+  const av = document.getElementById('edPadresAviso');
+  const msgs = [];
+  [['edPadre','padre'],['edMadre','madre']].forEach(([id,rol])=>{
+    const n = normKey(document.getElementById(id).value);
+    if(n && !BY_NAME.has(n) && !PARENTS_INDEX.has(n)) msgs.push('El ' + rol + ' no está en el hato ni en la base de pedigrí: el árbol se detendrá ahí.');
+  });
+  av.style.color = 'var(--ambar-alerta)';
+  av.textContent = msgs.join(' ');
+}
+
+function edGuardar(){
+  const err = document.getElementById('edError');
+  err.textContent = '';
+  const modo = document.getElementById('edModo').value;
+  const nombre = modo || document.getElementById('edNombre').value.trim().toUpperCase().replace(/\s+/g,' ');
+  const k = normKey(nombre);
+  const sexo = document.getElementById('edSexo').value;
+  const fecha = document.getElementById('edFecha').value;
+  const padre = document.getElementById('edPadre').value.trim().toUpperCase().replace(/\s+/g,' ') || null;
+  const madre = document.getElementById('edMadre').value.trim().toUpperCase().replace(/\s+/g,' ') || null;
+
+  if(!nombre){ err.textContent = 'El nombre es obligatorio.'; return; }
+  if(!modo && BY_NAME.has(k)){ err.textContent = 'Ya existe un animal llamado "' + nombre + '" en el inventario.'; return; }
+  if(!sexo){ err.textContent = 'Selecciona el sexo.'; return; }
+  if(padre && normKey(padre) === k){ err.textContent = 'Un animal no puede ser su propio padre.'; return; }
+  if(madre && normKey(madre) === k){ err.textContent = 'Un animal no puede ser su propia madre.'; return; }
+  if(padre && madre && normKey(padre) === normKey(madre)){ err.textContent = 'Padre y madre no pueden ser el mismo animal.'; return; }
+  const pA = padre && getAnimal(padre), mA = madre && getAnimal(madre);
+  if(pA && pA.sexo === 'H'){ err.textContent = padre + ' está registrada como hembra; no puede ser el padre.'; return; }
+  if(mA && mA.sexo === 'M'){ err.textContent = madre + ' está registrado como macho; no puede ser la madre.'; return; }
+  // Que el animal no termine siendo ancestro de sí mismo.
+  if(modo && (padre || madre)){
+    const visto = new Set();
+    const esAncestro = (n, d)=>{
+      if(!n || d > 40) return false;
+      const kn = normKey(n); if(kn === k) return true;
+      if(visto.has(kn)) return false; visto.add(kn);
+      const pp = getParents(n); return esAncestro(pp.padre, d+1) || esAncestro(pp.madre, d+1);
+    };
+    if(esAncestro(padre,0) || esAncestro(madre,0)){ err.textContent = 'Ese pedigrí haría que el animal sea ancestro de sí mismo. Revisa padre y madre.'; return; }
+  }
+
+  const notas = edLeerNotas();
+  const campos = Object.assign({
+    fecha_nac: fecha ? fecha + 'T00:00:00' : null,
+    raza: document.getElementById('edRaza').value || null,
+    sexo, padre, madre,
+    activo: document.getElementById('edActivo').value,
+    registro: document.getElementById('edRegistro').value.trim() || null,
+    comentario: document.getElementById('edComentario').value.trim() || null,
+  }, notas, edCalifs(notas));
+
+  const previo = edDB.animales[k];
+  const base = BY_NAME.get(k);
+  const estado = (!modo || (base && base._edNuevo) || (previo && previo.estado === 'nuevo')) ? 'nuevo' : 'editado';
+  edDB.animales[k] = { nombre, estado, campos, ts: Date.now(), subido: false };
+  edSave();
+  edAplicarUno(k, edDB.animales[k]);
+  edCerrar();
+  edRefrescarTablero();
+  crToast((modo ? 'Cambios guardados en ' : 'Agregado al inventario: ') + nombre + '.' + (edCfg.token ? '' : ' Quedó en este dispositivo.'));
+  edSincronizarPronto();
+}
+
+function edBorrarActual(){
+  const nombre = document.getElementById('edModo').value;
+  const a = getAnimal(nombre);
+  if(!a || !a._edNuevo) return;
+  if(!confirm('¿Eliminar a ' + nombre + ' del inventario?\n\nSolo se pueden eliminar los animales agregados desde la app. Los que vienen del Excel se marcan como Inactivos.')) return;
+  const k = normKey(nombre);
+  edDB.animales[k] = { nombre, estado:'borrado', campos:{}, ts: Date.now(), subido:false };
+  edSave();
+  edAplicarUno(k, edDB.animales[k]);
+  edCerrar();
+  edRefrescarTablero();
+  crToast(nombre + ' se eliminó del inventario.');
+  edSincronizarPronto();
+}
+
+function edDeshacer(k){
+  const e = edDB.animales[k]; if(!e) return;
+  const esNuevo = e.estado === 'nuevo';
+  const msg = esNuevo ? '¿Eliminar a ' + e.nombre + ', que fue agregado desde la app?'
+                      : '¿Deshacer los cambios de ' + e.nombre + ' y volver a los datos del Excel?';
+  if(!confirm(msg)) return;
+  edDB.animales[k] = { nombre:e.nombre, estado: esNuevo ? 'borrado' : 'revertido', campos:{}, ts: Date.now(), subido:false };
+  edSave();
+  edAplicarUno(k, edDB.animales[k]);
+  edRefrescarTablero();
+  edPintarSync();
+  edSincronizarPronto();
+}
+
+// ---------------------------------------------------------------------
+// Sincronización con GitHub (archivo cambios.json del repositorio)
+// ---------------------------------------------------------------------
+function edB64Encode(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = ''; for(let i=0;i<bytes.length;i+=0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i+0x8000));
+  return btoa(bin);
+}
+function edB64Decode(b64){
+  const bin = atob(b64.replace(/\s/g,''));
+  const bytes = new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function edApiUrl(){ return `https://api.github.com/repos/${encodeURIComponent(edCfg.owner)}/${encodeURIComponent(edCfg.repo)}/contents/${ED_ARCHIVO}`; }
+function edHeaders(){
+  const h = { 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
+  if(edCfg.token) h['Authorization'] = 'Bearer ' + edCfg.token;
+  return h;
+}
+async function edLeerRemoto(){
+  try{
+    const r = await fetch(edApiUrl() + '?ref=' + encodeURIComponent(edCfg.branch||'main') + '&t=' + Date.now(), { headers: edHeaders(), cache:'no-store' });
+    if(r.status === 404) return { db:{animales:{}}, sha:null, fuente:'api' };
+    if(r.status === 401) throw Object.assign(new Error('llave'), {codigo:401});
+    if(!r.ok) throw new Error('api ' + r.status);
+    const j = await r.json();
+    const db = JSON.parse(edB64Decode(j.content || ''));
+    return { db: db && db.animales ? db : {animales:{}}, sha: j.sha, fuente:'api' };
+  }catch(e){
+    if(e.codigo === 401) throw e;
+    // Sin API (límite de consultas, red rara): se intenta la copia publicada.
+    const r = await fetch(ED_ARCHIVO + '?t=' + Date.now(), { cache:'no-store' });
+    if(r.status === 404) return { db:{animales:{}}, sha:undefined, fuente:'pages' };
+    if(!r.ok) throw new Error('pages ' + r.status);
+    const db = await r.json();
+    return { db: db && db.animales ? db : {animales:{}}, sha:undefined, fuente:'pages' };
+  }
+}
+function edMezclar(remoto){
+  let cambiaronLocal = false;
+  Object.entries(remoto.animales || {}).forEach(([k, er])=>{
+    const el = edDB.animales[k];
+    if(!el || (er.ts||0) > (el.ts||0)){
+      edDB.animales[k] = Object.assign({}, er, { subido:true });
+      cambiaronLocal = true;
+    }
+  });
+  // ¿Hay algo aquí que el repositorio no tenga (o tenga más viejo)?
+  const faltanArriba = Object.entries(edDB.animales).some(([k, el])=>{
+    const er = (remoto.animales||{})[k];
+    return !er || (el.ts||0) > (er.ts||0);
+  });
+  return { cambiaronLocal, faltanArriba };
+}
+function edParaSubir(){
+  const animales = {};
+  Object.entries(edDB.animales).forEach(([k,e])=>{ const c = Object.assign({}, e); delete c.subido; animales[k] = c; });
+  return { version:1, actualizado: new Date().toISOString(), animales };
+}
+
+function edSincronizarPronto(){
+  clearTimeout(edSincronizarPronto._t);
+  edSincronizarPronto._t = setTimeout(()=>edSincronizar({}), 600);
+}
+async function edSincronizar(opts){
+  opts = opts || {};
+  if(edSyncEnCurso) return edSyncEnCurso;
+  if(!navigator.onLine){
+    if(opts.manual) crToast('Sin señal. Los cambios siguen guardados aquí y se suben cuando vuelva la conexión.');
+    edPintarIndicadores(); return;
+  }
+  edSyncEnCurso = (async()=>{
+    edEstadoSync = 'sincronizando'; edPintarIndicadores();
+    try{
+      for(let intento=0; intento<2; intento++){
+        const rem = await edLeerRemoto();
+        const { cambiaronLocal, faltanArriba } = edMezclar(rem.db);
+        if(cambiaronLocal){ edSave(); edAplicarTodo(); edRefrescarTablero(); }
+        if(!faltanArriba || !edCfg.token){
+          if(!faltanArriba) Object.values(edDB.animales).forEach(e=>e.subido = true);
+          edUltimaSync = Date.now(); edSave();
+          edEstadoSync = edCfg.token ? 'ok' : 'local';
+          if(opts.manual) crToast(edCfg.token ? 'Todo al día con GitHub.' : (faltanArriba ? 'Se trajeron los cambios del repositorio. Para subir los de este dispositivo falta la llave de GitHub.' : 'Todo al día.'));
+          return;
+        }
+        if(rem.sha === undefined){ // se leyó por la copia publicada: hace falta el sha de la API
+          const r2 = await fetch(edApiUrl() + '?ref=' + encodeURIComponent(edCfg.branch||'main'), { headers: edHeaders(), cache:'no-store' });
+          rem.sha = r2.status === 404 ? null : (r2.ok ? (await r2.json()).sha : null);
+        }
+        const pendientes = edPendientes().map(e=>e.nombre);
+        const body = {
+          message: 'App: ' + (pendientes.length ? pendientes.slice(0,4).join(', ') + (pendientes.length>4 ? ' y ' + (pendientes.length-4) + ' más' : '') : 'cambios'),
+          content: edB64Encode(JSON.stringify(edParaSubir(), null, 1)),
+          branch: edCfg.branch || 'main',
+        };
+        if(rem.sha) body.sha = rem.sha;
+        const put = await fetch(edApiUrl(), { method:'PUT', headers: Object.assign({'Content-Type':'application/json'}, edHeaders()), body: JSON.stringify(body) });
+        if(put.ok){
+          Object.values(edDB.animales).forEach(e=>e.subido = true);
+          edUltimaSync = Date.now(); edSave();
+          edEstadoSync = 'ok';
+          if(opts.manual) crToast('Cambios subidos a GitHub. Ya los ven tus otros dispositivos.');
+          return;
+        }
+        if(put.status === 401 || put.status === 403){ throw Object.assign(new Error('llave'), {codigo:put.status}); }
+        if(put.status !== 409 && put.status !== 422) throw new Error('put ' + put.status);
+        // 409/422: otro dispositivo subió algo justo ahora; se vuelve a leer y juntar.
+      }
+      throw new Error('conflicto');
+    }catch(e){
+      console.warn('Sincronización', e);
+      edEstadoSync = 'error';
+      edErrorSync = (e.codigo === 401 || e.codigo === 403)
+        ? 'GitHub no aceptó la llave. Revisa que tenga permiso de escritura en «Contents» para este repositorio y que no haya vencido.'
+        : 'No se pudo hablar con GitHub. Los cambios siguen guardados aquí; se reintenta solo.';
+      if(opts.manual) crToast(edErrorSync);
+    }finally{
+      edSyncEnCurso = null;
+      edPintarIndicadores();
+    }
+  })();
+  return edSyncEnCurso;
+}
+let edEstadoSync = 'inicio', edErrorSync = '';
+
+function edGuardarConfig(){
+  edCfg.owner = document.getElementById('edCfgOwner').value.trim() || edCfg.owner;
+  edCfg.repo = document.getElementById('edCfgRepo').value.trim() || edCfg.repo;
+  const t = document.getElementById('edCfgToken').value.trim();
+  if(t) edCfg.token = t;
+  edSaveCfg();
+  document.getElementById('edCfgToken').value = '';
+  edPintarSync();
+  edSincronizar({manual:true});
+}
+function edOlvidarToken(){
+  if(!edCfg.token){ crToast('Este dispositivo no tiene llave guardada.'); return; }
+  if(!confirm('¿Quitar la llave de GitHub de este dispositivo? Los cambios ya guardados no se pierden.')) return;
+  edCfg.token = ''; edSaveCfg(); edEstadoSync = 'local'; edPintarSync(); edPintarIndicadores();
+}
+
+// ---------------------------------------------------------------------
+// Ventana de datos, respaldo y filas para Excel
+// ---------------------------------------------------------------------
+function edAbrirSync(){
+  document.getElementById('edCfgOwner').value = edCfg.owner;
+  document.getElementById('edCfgRepo').value = edCfg.repo;
+  document.getElementById('edCfgToken').value = '';
+  document.getElementById('edCfgToken').placeholder = edCfg.token ? '•••••••• (guardada) — escribe otra para cambiarla' : 'github_pat_…';
+  edPintarSync();
+  document.getElementById('edSyncModal').classList.add('open');
+  edSincronizar({});
+}
+function edCerrarSync(){ document.getElementById('edSyncModal').classList.remove('open'); }
+
+function edHace(ts){
+  if(!ts) return 'nunca';
+  const s = Math.round((Date.now()-ts)/1000);
+  if(s < 60) return 'hace un momento';
+  if(s < 3600) return 'hace ' + Math.round(s/60) + ' min';
+  if(s < 86400) return 'hace ' + Math.round(s/3600) + ' h';
+  return new Date(ts).toLocaleDateString('es-CO', {day:'numeric', month:'short'});
+}
+function edPintarSync(){
+  const box = document.getElementById('edSyncEstado'); if(!box) return;
+  const pend = edPendientes().length;
+  let cls = '', txt = '';
+  if(!edCfg.token){
+    cls = 'local';
+    txt = '<b>Solo en este dispositivo.</b> Los cambios se guardan aquí y funcionan sin señal. Para verlos también en el computador u otro celular, agrega abajo la llave de GitHub.';
+  } else if(edEstadoSync === 'sincronizando'){
+    txt = 'Sincronizando con GitHub…';
+  } else if(edEstadoSync === 'error'){
+    txt = '<b>' + crEsc(edErrorSync) + '</b>' + (pend ? '<br>' + pend + ' cambio(s) esperando para subir.' : '');
+  } else if(pend){
+    txt = '<b>' + pend + ' cambio(s) esperando para subir.</b> ' + (navigator.onLine ? 'Se suben en un momento.' : 'Se suben solos cuando vuelva la señal.');
+  } else {
+    cls = 'ok';
+    txt = '<b>Todo al día.</b> Última sincronización: ' + edHace(edUltimaSync) + '. Repositorio ' + crEsc(edCfg.owner + '/' + edCfg.repo) + '.';
+  }
+  box.className = 'ed-sync-estado ' + cls;
+  document.getElementById('edSyncTexto').innerHTML = txt;
+
+  const lista = Object.entries(edDB.animales)
+    .filter(([,e])=>e.estado !== 'revertido' && !(e.estado === 'borrado' && e.subido))
+    .sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
+  const etiqueta = {nuevo:'Agregado', editado:'Editado', borrado:'Eliminado'};
+  document.getElementById('edSyncLista').innerHTML = lista.length ? lista.map(([k,e])=>`
+    <div class="ed-lista-item">
+      <div class="nom"><b>${crEsc(e.nombre)}</b><span>${etiqueta[e.estado]||e.estado} · ${edHace(e.ts)}${e.subido ? '' : ' · sin subir'}</span></div>
+      ${e.estado !== 'borrado' ? `<button class="btn ghost" data-n="${crAttr(e.nombre)}" onclick="edCerrarSync();openFicha(this.dataset.n)">Ver</button>
+      <button class="btn ghost" data-k="${crAttr(k)}" onclick="edDeshacer(this.dataset.k)">${e.estado==='nuevo' ? 'Eliminar' : 'Deshacer'}</button>` : ''}
+    </div>`).join('')
+    : '<div style="padding:16px;color:var(--cuero-700);font-size:13px;text-align:center;">Todavía no hay cambios hechos desde la app.</div>';
+}
+function edPintarIndicadores(){
+  const n = edPendientes().length;
+  document.querySelectorAll('.ed-pend').forEach(el=>el.textContent = n ? String(n) : '');
+  if(document.getElementById('edSyncModal') && document.getElementById('edSyncModal').classList.contains('open')) edPintarSync();
+}
+
+function edExportarJSON(){
+  const blob = new Blob([JSON.stringify(edParaSubir(), null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'el_revuelo_cambios_' + crToday() + '.json';
+  a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+function edImportarJSON(ev){
+  const file = ev.target.files && ev.target.files[0]; if(!file) return;
+  const fr = new FileReader();
+  fr.onload = ()=>{
+    try{
+      const p = JSON.parse(fr.result);
+      if(!p || !p.animales) throw new Error('formato');
+      Object.values(p.animales).forEach(e=>e.subido = false);
+      const antes = JSON.stringify(edDB.animales);
+      edMezclar(p); Object.entries(p.animales).forEach(([k,e])=>{ if(edDB.animales[k] && edDB.animales[k].ts === e.ts) edDB.animales[k].subido = false; });
+      edSave(); edAplicarTodo(); edRefrescarTablero(); edPintarSync();
+      crToast(antes === JSON.stringify(edDB.animales) ? 'El respaldo no traía nada nuevo.' : 'Respaldo importado.');
+      edSincronizarPronto();
+    }catch(e){ alert('El archivo no tiene el formato esperado.'); }
+    ev.target.value = '';
+  };
+  fr.readAsText(file);
+}
+// Una fila por animal agregado o editado, para llevar los cambios al Excel maestro.
+function edExportarCSV(){
+  const filas = Object.values(edDB.animales).filter(e=>e.estado==='nuevo' || e.estado==='editado');
+  if(!filas.length){ alert('No hay animales agregados o editados desde la app.'); return; }
+  const cols = [['nombre','NOMBRE'],['fecha_nac','FECHA NAC'],['raza','RAZA'],['sexo','SEXO'],['padre','PADRE'],['madre','MADRE'],
+    ['registro','REGISTRO'],['activo','ACTIVO'],['comentario','COMENTARIO'],
+    ...ED_PASO.map(([k,l])=>[k,l.toUpperCase()]), ...ED_CONF.map(([k,l])=>[k,l.toUpperCase()]),
+    ['calif_paso','CALIF PASO'],['calif_conf','CALIF CONF'],['calif_final','CALIF FINAL'],['_estado','CAMBIO']];
+  const celda = v=>{ if(v==null) return ''; const s = String(v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
+  const lineas = [cols.map(c=>c[1]).join(';')];
+  filas.forEach(e=>{
+    const a = getAnimal(e.nombre) || Object.assign({nombre:e.nombre}, e.campos);
+    lineas.push(cols.map(([k])=>{
+      if(k==='_estado') return e.estado==='nuevo' ? 'AGREGADO' : 'EDITADO';
+      let v = a[k];
+      if(k==='fecha_nac' && v){ const d = String(v).slice(0,10).split('-'); v = d[2]+'/'+d[1]+'/'+d[0]; }
+      if(typeof v === 'number') v = String(Math.round(v*10000)/10000).replace('.',',');
+      return celda(v);
+    }).join(';'));
+  });
+  const blob = new Blob(['﻿' + lineas.join('\r\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'el_revuelo_cambios_para_excel_' + crToday() + '.csv';
+  a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+
+// ---------------------------------------------------------------------
+// Arranque
+// ---------------------------------------------------------------------
+edLoad();
+edAplicarTodo();
+edConstruirForm();
+document.getElementById('edNombre').addEventListener('input', edAlEscribirNombre);
+document.getElementById('edPadre').addEventListener('change', edAvisoPadres);
+document.getElementById('edMadre').addEventListener('change', edAvisoPadres);
+['edModal','edSyncModal'].forEach(id=>{
+  const m = document.getElementById(id);
+  m.addEventListener('click', ev=>{ if(ev.target === m) m.classList.remove('open'); });
+});
+document.addEventListener('keydown', ev=>{
+  if(ev.key === 'Escape'){ edCerrar(); edCerrarSync(); }
+});
+window.addEventListener('online', ()=>edSincronizar({}));
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible') edSincronizar({}); });
+window.edAbrirNuevo = edAbrirNuevo; window.edAbrirEditar = edAbrirEditar; window.edAbrirSync = edAbrirSync;
+setTimeout(()=>{ edPintarIndicadores(); edSincronizar({}); }, 400);
+
+// =====================================================================
+// INSTALAR COMO APP — sin la barra con la dirección del navegador
+// =====================================================================
+(function(){
+  const enApp = window.matchMedia('(display-mode: standalone)').matches ||
+                window.matchMedia('(display-mode: fullscreen)').matches ||
+                navigator.standalone === true;
+  if(enApp) return;
+  const tactil = window.matchMedia('(pointer: coarse)').matches;
+  let descartado = false;
+  try{ descartado = localStorage.getItem('elrevuelo_instalar_no') === '1'; }catch(e){}
+  const banner = document.getElementById('instalarBanner');
+  const texto = document.getElementById('instalarTexto');
+  const si = document.getElementById('instalarSi');
+  const no = document.getElementById('instalarNo');
+  let promptGuardado = null;
+  const mostrar = (html, conBoton)=>{
+    if(descartado) return;
+    texto.innerHTML = html;
+    si.style.display = conBoton ? '' : 'none';
+    no.textContent = conBoton ? 'Ahora no' : 'Entendido';
+    banner.classList.add('open');
+  };
+  no.onclick = ()=>{ banner.classList.remove('open'); try{ localStorage.setItem('elrevuelo_instalar_no','1'); }catch(e){} };
+  si.onclick = async ()=>{
+    if(!promptGuardado) return;
+    promptGuardado.prompt();
+    try{ await promptGuardado.userChoice; }catch(e){}
+    promptGuardado = null; banner.classList.remove('open');
+  };
+  window.addEventListener('beforeinstallprompt', ev=>{
+    ev.preventDefault(); promptGuardado = ev;
+    mostrar('<b>Instala El Revuelo como app.</b> Se abre en pantalla completa, sin la barra con la dirección, y funciona sin señal.', true);
+  });
+  window.addEventListener('appinstalled', ()=>banner.classList.remove('open'));
+  if(!tactil) return;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  setTimeout(()=>{
+    if(promptGuardado || banner.classList.contains('open')) return;
+    if(ios){
+      mostrar('<b>Para usarlo como app, sin la barra de dirección:</b> toca <b>Compartir</b> (el cuadro con la flecha) → <b>Agregar a pantalla de inicio</b>, y si aparece la opción <b>Abrir como app web</b>, déjala activada. Luego ábrelo siempre desde ese ícono.', false);
+    } else {
+      mostrar('<b>Para usarlo como app, sin la barra de dirección:</b> abre el menú <b>⋮</b> del navegador → <b>Instalar app</b> (o <b>Agregar a pantalla principal → Instalar</b>). Luego ábrelo siempre desde ese ícono.', false);
+    }
+  }, 3500);
 })();
 
 // El conteo del hato activo se calcula, no se escribe a mano: así no

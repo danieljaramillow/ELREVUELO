@@ -11,7 +11,7 @@
    descartar la copia vieja y bajar la nueva.
    --------------------------------------------------------------------- */
 
-const VERSION = 'v5';
+const VERSION = 'v6';
 const CACHE = 'el-revuelo-' + VERSION;
 
 // Lo que se guarda de entrada. Si alguno no existe (por ejemplo porque
@@ -58,6 +58,10 @@ self.addEventListener('fetch', evento => {
 
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+
+  // Los cambios hechos desde la app (cambios.json) nunca se sirven de la
+  // copia guardada: siempre se piden a la red para ver lo último.
+  if (url.pathname.endsWith('/cambios.json')) return;
 
   // La página principal: se intenta la red primero para que las
   // correcciones lleguen apenas hay señal, con la copia guardada como
