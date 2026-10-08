@@ -1,1 +1,34 @@
-{"version":1,"animales":{}}
+{
+ "version": 1,
+ "actualizado": "2026-10-08T11:06:52.652Z",
+ "animales": {
+  "TRUEQUE DEL REVUELO": {
+   "nombre": "TRUEQUE DEL REVUELO",
+   "estado": "nuevo",
+   "campos": {
+    "fecha_nac": "2026-07-26T00:00:00",
+    "raza": "P4",
+    "sexo": "M",
+    "padre": "SUBLIME GUAJIRO DE SIBERIA",
+    "madre": "RUBRICA DEL REVUELO",
+    "activo": "ACTIVO",
+    "registro": null,
+    "comentario": "Esta en Tolu fue trasladado con la yegua",
+    "pulimento": null,
+    "elasticidad": null,
+    "manos": null,
+    "rapidez": null,
+    "temp": null,
+    "brio": null,
+    "caract": null,
+    "conf_rasgo": null,
+    "tamano": null,
+    "aplomo": null,
+    "calif_paso": null,
+    "calif_conf": null,
+    "calif_final": null
+   },
+   "ts": 1791457611154
+  }
+ }
+}
