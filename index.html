@@ -4773,13 +4773,17 @@ async function exElegirArchivo(ev){
     const buf = await file.arrayBuffer();
     const wb = XLSX.read(buf, { type:'array' });
     leido = exLeerListado(XLSX, wb);
+    // Fecha en que se guardó el Excel: la que Excel anota dentro del archivo;
+    // si no la trae, la del archivo en el dispositivo.
+    const md = wb.Props && wb.Props.ModifiedDate ? new Date(wb.Props.ModifiedDate).getTime() : NaN;
+    leido.fechaExcel = isFinite(md) ? md : (file.lastModified || Date.now());
   }catch(e){
     console.warn(e);
     alert(e && e.message && /LISTADO/.test(e.message) ? e.message : 'No se pudo leer ese archivo. Debe ser el Excel del programa (.xlsx) con la hoja LISTADO.');
     return;
   }
   if(!leido.animales.length){ alert('No se encontraron animales en la hoja LISTADO (filas 6 en adelante).'); return; }
-  exPropuesta = { archivo: file.name, animales: leido.animales, pedigri: leido.pedigri };
+  exPropuesta = { archivo: file.name, animales: leido.animales, pedigri: leido.pedigri, fechaExcel: leido.fechaExcel };
   exMostrarResumen();
 }
 
@@ -4805,25 +4809,28 @@ function exDiferencias(){
     else if(!exIgual(o.padre, p.padre) || !exIgual(o.madre, p.madre)) pedCambian++;
   });
   // Cambios hechos desde la app que el Excel nuevo todavía no tiene.
-  // Al cargar el Excel, vale el Excel: los cambios de la app sobre animales
-  // que están en el Excel se cierran. Los animales agregados solo en la app
-  // (que el Excel no tiene) se pueden quitar con la casilla del resumen.
-  const appSoloApp = [], appIncorporados = [], appReemplazados = [];
+  // Gana la última actualización: si el cambio en la app es posterior a la
+  // fecha en que se guardó el Excel, se conserva; si es anterior, vale el Excel.
+  // Los animales agregados solo en la app (que el Excel no tiene) se pueden
+  // quitar con la casilla del resumen.
+  const appSoloApp = [], appIncorporados = [], appReemplazados = [], appGananApp = [];
   Object.entries(edDB.animales).forEach(([k,e])=>{
     if(e.estado !== 'editado' && e.estado !== 'nuevo') return;
     const a = ahora.get(k);
     if(!a){ if(e.estado === 'nuevo') appSoloApp.push(e.nombre); return; }
     const difiere = ED_CAMPOS.some(c=>!exIgual(e.campos[c], a[c]));
-    (difiere ? appReemplazados : appIncorporados).push(e.nombre);
+    if(!difiere) appIncorporados.push(e.nombre);
+    else if((e.ts||0) > exPropuesta.fechaExcel) appGananApp.push(e.nombre);
+    else appReemplazados.push(e.nombre);
   });
-  return { nuevos, salen, cambian, pedNuevos, pedCambian, appSoloApp, appIncorporados, appReemplazados, total: ahora.size };
+  return { nuevos, salen, cambian, pedNuevos, pedCambian, appSoloApp, appIncorporados, appReemplazados, appGananApp, total: ahora.size };
 }
 
 function exMostrarResumen(){
   const d = exDiferencias();
   exPropuesta.dif = d;
   const esc = crEsc;
-  let h = `<p class="ayuda" style="margin-bottom:10px;">Archivo <b>${esc(exPropuesta.archivo)}</b>: ${d.total} animales en el inventario y ${exPropuesta.pedigri.length} en la base de pedigrí.</p>`;
+  let h = `<p class="ayuda" style="margin-bottom:10px;">Archivo <b>${esc(exPropuesta.archivo)}</b>: ${d.total} animales en el inventario y ${exPropuesta.pedigri.length} en la base de pedigrí. Guardado el ${esc(new Date(exPropuesta.fechaExcel).toLocaleString('es-CO', {day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit'}))}.</p><p class="ayuda" style="margin-bottom:10px;">Gana la última actualización: lo editado en la app después de esa fecha se conserva; lo anterior lo reemplaza el Excel.</p>`;
   const sinCambios = !d.nuevos.length && !d.salen.length && !d.cambian.length && !d.pedNuevos && !d.pedCambian;
   if(sinCambios) h += '<div class="ex-bloque"><b>No hay diferencias</b> con los datos que ya tiene el tablero.</div>';
   if(d.nuevos.length) h += `<div class="ex-bloque"><h5>Entran al inventario (${d.nuevos.length})</h5>` +
@@ -4834,7 +4841,8 @@ function exMostrarResumen(){
     d.salen.map(a=>`<div class="ex-fila"><b>${esc(a.nombre)}</b></div>`).join('') + '</div>';
   if(d.pedNuevos || d.pedCambian) h += `<div class="ex-bloque"><h5>Base de pedigrí</h5><div class="ex-fila"><span>${d.pedNuevos} ancestro(s) nuevo(s) · ${d.pedCambian} con padre o madre corregidos</span></div></div>`;
   if(d.appIncorporados.length) h += `<div class="ex-bloque"><h5>Cambios de la app que ya están en el Excel (${d.appIncorporados.length})</h5><p class="ayuda">Se dan por pasados al Excel y se quitan de la lista de cambios.</p><div class="ex-fila"><span>${esc(d.appIncorporados.join(', '))}</span></div></div>`;
-  if(d.appReemplazados.length) h += `<div class="ex-bloque ex-alerta"><h5>Cambios de la app que reemplaza el Excel (${d.appReemplazados.length})</h5><p class="ayuda">Estos animales se editaron en la app con datos distintos a los del Excel. Vale lo del Excel.</p><div class="ex-fila"><span>${esc(d.appReemplazados.join(', '))}</span></div></div>`;
+  if(d.appReemplazados.length) h += `<div class="ex-bloque ex-alerta"><h5>Cambios de la app que reemplaza el Excel (${d.appReemplazados.length})</h5><p class="ayuda">Se editaron en la app antes de guardar el Excel. Vale lo del Excel, que es más reciente.</p><div class="ex-fila"><span>${esc(d.appReemplazados.join(', '))}</span></div></div>`;
+  if(d.appGananApp.length) h += `<div class="ex-bloque"><h5>Cambios de la app más recientes que el Excel (${d.appGananApp.length})</h5><p class="ayuda">Se hicieron en la app después de guardar el Excel. Se conservan; pásalos al Excel con «Filas para Excel (CSV)».</p><div class="ex-fila"><span>${esc(d.appGananApp.join(', '))}</span></div></div>`;
   if(d.appSoloApp.length) h += `<div class="ex-bloque ex-alerta"><h5>Agregados en la app que no están en el Excel (${d.appSoloApp.length})</h5><div class="ex-fila"><span>${esc(d.appSoloApp.join(', '))}</span></div><label class="ex-check"><input type="checkbox" id="exQuitarSoloApp"> Quitarlos del inventario (vale solo el Excel)</label><p class="ayuda">Si no marcas la casilla, siguen en el inventario hasta que los pases al Excel.</p></div>`;
   document.getElementById('exResumen').innerHTML = h;
   document.getElementById('exAplicar').textContent = sinCambios ? 'Aplicar de todas formas' : 'Actualizar el tablero';
