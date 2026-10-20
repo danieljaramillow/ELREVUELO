@@ -11,7 +11,7 @@
    descartar la copia vieja y bajar la nueva.
    --------------------------------------------------------------------- */
 
-const VERSION = 'v7';
+const VERSION = 'v8';
 const CACHE = 'el-revuelo-' + VERSION;
 
 // Lo que se guarda de entrada. Si alguno no existe (por ejemplo porque
