@@ -196,7 +196,8 @@ body.presentando .global-search-fab{display:none !important;}
   body.presentando > *:not(#presOverlay){display:none !important;}
   body.presentando #presOverlay{position:static;display:block !important;background:none;overflow:visible;}
   body.presentando .pres-bar{display:none !important;}
-  body.presentando .pres-sheet-wrap{padding:0;}
+  body.presentando .pres-sheet-wrap{padding:0;height:auto !important;overflow:visible !important;}
+  html,body.presentando{overflow:visible !important;height:auto !important;}
   body.presentando .pres-sheet{box-shadow:none;margin:0;transform:none !important;}
   @page{size:letter landscape;margin:0;}
   body.presentando{background:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
@@ -2690,7 +2691,7 @@ document.getElementById('presCerrar').addEventListener('click', cerrarPresentaci
 document.getElementById('presPdf').addEventListener('click', ()=>{
   const t = document.title;
   document.title = 'Presentacion - ' + (presAnimal||'');
-  const s = document.getElementById('presSheet'); s.style.transform=''; s.style.marginLeft='';
+  const s = document.getElementById('presSheet'); s.style.transform=''; s.style.marginLeft=''; s.parentElement.style.height='';
   setTimeout(()=>{ window.print(); document.title = t; presAjustarEscala(); }, 50);
 });
 document.getElementById('presFoto').addEventListener('change', e=>{
